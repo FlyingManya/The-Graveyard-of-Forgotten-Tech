@@ -1,4 +1,5 @@
-<img width="6000" height="3375" alt="GOFT_Home_Page" src="https://github.com/user-attachments/assets/4cc5b7f1-7fa4-4a44-b262-19448512926f" />
+<img width="1917" height="1075" alt="Screenshot 2025-11-09 164556" src="https://github.com/user-attachments/assets/d8a8c5ba-5cca-4f48-98a6-4746ce105324" />
+
 
 # The-Graveyard-of-Forgotten-Tech
 “The Graveyard of Forgotten Things” is a spooky interactive web experience where forgotten inventions tell their stories — and show how they’ve been reborn for the modern world.”
