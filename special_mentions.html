@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Background + GIFs + Enter Button</title>
+
+<!-- link the external button CSS -->
+<link rel="stylesheet" href="button.css">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+
+        /* 3 layers: top → bottom */
+        background-image: 
+            url("images/special_mentions_background.svg");
+
+        background-repeat:  no-repeat;
+        background-position: center center;
+        background-attachment:  fixed;
+        background-size:  cover; /* one size for each image */
+    }
+</style>
+
+</head>
+<body>
+
+<!-- SVG image button -->
+<button
+  class="haunt-btn"
+  style="
+    --btn-image: url('buttons/main_menu_button.svg');
+    --btn-top: 6%;
+    --btn-left: 92%;
+    --btn-width: 200px;
+    --btn-height: 190px;
+  "
+  onclick="window.location.href='menu.html'">
+</button>
+
+
+</body>
+</html>
