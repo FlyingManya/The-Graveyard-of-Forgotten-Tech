@@ -13,7 +13,7 @@
         margin: 0;
         padding: 0;
 
-        /* 3 layers: top → bottom */
+        /* 2 layers: top → bottom */
         background-image: 
             url("../gifs/menu_heading.gif"),
             url("../images/menu_background.svg");
@@ -21,56 +21,66 @@
         background-repeat: no-repeat, no-repeat;
         background-position: center center, center center;
         background-attachment: fixed, fixed;
-        background-size: cover, cover; /* one size for each image */
+        background-size: cover, cover;
     }
 </style>
 
 </head>
 <body>
 
-<!-- SVG image button -->
+<!-- HOME / ENTER button -->
 <button
   class="haunt-btn"
   style="
     --btn-image: url('../buttons/enter_button.svg');
-    --btn-top: 32%;
+    --btn-top: 25%;
     --btn-left: 27%;
     --btn-width: 180px;
     --btn-height: 90px;
+    --btn-transform: translateX(-50%);
+    --btn-transform-active: translateX(-50%) scale(0.98);
   "
   onclick="window.location.href='./intro.html'">
 </button>
 
+<!-- PAGE OF INVENTIONS -->
 <button
   class="haunt-btn"
   style="
     --btn-image: url('../buttons/pg_of_inventions_button.svg');
-    --btn-top: 38%;
+    --btn-top: 36%;
     --btn-left: 64%;
-    --btn-width: 400px;
-    --btn-height: 400px;
+    --btn-width: 320px;
+    --btn-height: 200px;
+    --btn-transform-active: translateX(-50%) scale(0.98);
   "
   onclick="window.location.href='./intro.html'">
 </button>
+
+<!-- SPECIAL MENTIONS -->
 <button
   class="haunt-btn"
   style="
     --btn-image: url('../buttons/special_mentions_button.svg');
-    --btn-top: 56%;
+    --btn-top: 53%;
     --btn-left: 64%;
-    --btn-width: 400px;
-    --btn-height: 400px;
+    --btn-width: 320px;
+    --btn-height: 200px;
+    --btn-transform-active: translateX(-50%) scale(0.98);
   "
   onclick="window.location.href='./special_mentions.html'">
 </button>
+
+<!-- MEET THE CREATOR -->
 <button
   class="haunt-btn"
   style="
     --btn-image: url('../buttons/meet_the_creator_button.svg');
-    --btn-top: 73%;
+    --btn-top: 70%;
     --btn-left: 64%;
-    --btn-width: 380px;
-    --btn-height: 380px;
+    --btn-width: 320px;
+    --btn-height: 200px;
+    --btn-transform-active: translateX(-50%) scale(0.98);
   "
   onclick="window.location.href='./thankyou.html'">
 </button>
