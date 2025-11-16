@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Background + GIFs + Enter Button</title>
+
+<!-- link the external button CSS -->
+<link rel="stylesheet" href="button.css">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+
+        /* 3 layers: top → bottom */
+        background-image: 
+            url("gifs/intro_heading.gif"),
+            url("gifs/run_boy.gif"),
+            url("images/intro_background.svg");
+
+        background-repeat: no-repeat, no-repeat, no-repeat;
+        background-position: center center, center center, center center;
+        background-attachment: fixed, fixed, fixed;
+        background-size: cover, cover, cover; /* one size for each image */
+    }
+</style>
+
+</head>
+<body>
+
+<!-- SVG image button -->
+<button
+  class="haunt-btn"
+  style="
+    --btn-image: url('buttons/enter_button.svg');
+    --btn-top: 68%;
+    --btn-left: 31%;
+    --btn-width: 180px;
+    --btn-height: 90px;
+  "
+  onclick="window.location.href='menu.html'">
+</button>
+
+<button
+  class="haunt-btn"
+  style="
+    --btn-image: url('buttons/watch_demo_button.svg');
+    --btn-top: 68%;
+    --btn-left: 63%;
+    --btn-width: 180px;
+    --btn-height: 90px;
+  "
+  onclick="window.location.href='intro.html'">
+</button>
+
+</body>
+</html>
