@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Background + GIFs + Enter Button</title>
+
+<!-- button styles -->
+<link rel="stylesheet" href="../css/button.css">
+<!-- glow effect styles -->
+<link rel="stylesheet" href="../css/glow.css">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+
+        /* Only graveyard as background */
+        background-image: url("../images/Graveyard_background.svg");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    /* your existing image style */
+    .radio-grave {
+        display: block;
+        width: 100%;
+        height: auto;
+        transition: filter 0.3s ease;  /* added for smooth glow */
+        pointer-events: none;          /* image itself doesn't capture hover */
+    }
+
+    /* wrapper to contain both hotspot + image */
+    .radio-grave-wrapper {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    /* invisible rectangle inside the grave area */
+    .grave-hotspot {
+        position: absolute;
+
+        /* 🔧 you already tuned these to sit inside the grave */
+        top: 26%;
+        left: 6%;
+        width: 10%;
+        height: 50%;
+
+        pointer-events: auto;
+        outline: 2px dashed red;
+        background-color: rgba(255, 0, 0, 0.15);
+    }
+
+    /* ✅ NEW: only when hovering the hotspot, glow the *next* sibling image */
+    .grave-hotspot:hover + .radio-grave {
+        filter: drop-shadow(0 0 6px #00ffff)
+                drop-shadow(0 0 12px #00ffff);
+    }
+</style>
+
+</head>
+<body>
+
+    <!-- WRAP the image + hotspot -->
+    <div class="radio-grave-wrapper">
+        <!-- hotspot (hover area only over part of the grave) -->
+        <div class="grave-hotspot"></div>
+
+        <!-- Radio grave SVG: layout controlled by the SVG/image itself -->
+        <img src="../images/radio_grave.svg"
+             alt="Radio Grave"
+             class="radio-grave">
+    </div>
+
+    <!-- EXIT button -->
+    <button
+      class="haunt-btn"
+      style="
+        --btn-image: url('../buttons/exit_button.svg');
+        --btn-top: 6%;
+        --btn-left: 92%;
+        --btn-width: 150px;
+        --btn-height: 190px;
+      "
+      onclick="window.location.href='./menu.html'">
+    </button>
+
+</body>
+</html>
