@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Background + GIFs + Enter Button</title>
+
+<!-- Preload images for faster loading -->
+<link rel="preload" href="./image/background_lab.svg" as="image">
+<link rel="preload" href="./gifs/projector_heading.gif" as="image">
+
+<!-- link the external button CSS -->
+<link rel="stylesheet" href="../css/button.css">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+
+        /* 3 layers: top → bottom */
+        background-image: 
+            url("./gifs/projector_heading.gif"),
+            url("./images/background_lab.svg");
+
+        background-repeat: no-repeat, no-repeat;
+        background-position: center center, center center;
+        background-attachment: fixed, fixed;
+        background-size: cover, cover; /* one size for each image */
+    }
+</style>
+
+</head>
+<body>
+    <!-- SVG image button -->
+<button
+  class="haunt-btn"
+  style="
+    --btn-image: url('../buttons/exit_button.svg');
+    --btn-top: 6%;
+    --btn-left: 92%;
+    --btn-width: 200px;
+    --btn-height: 190px;
+  "
+  onclick="window.location.href='../graveyard/graveyard.html'">
+</button>
+
+<button
+  class="haunt-btn"
+  style="
+    --btn-image: url('../buttons/back_button.svg');
+    --btn-top: 6%;
+    --btn-left: 8%;
+    --btn-width: 200px;
+    --btn-height: 190px;
+  "
+  onclick="window.location.href='../haunted_house/projector_HH.html'">
+</button>
+
+<button
+  class="haunt-btn"
+  style="
+    --btn-image: url('../buttons/view_invention_button.svg');
+    --btn-top: 80%;
+    --btn-left: 87%;
+    --btn-width: 250px;
+    --btn-height: 190px;
+  "
+  onclick="window.location.href='../haunted_house/projector_HH.html'">
+</button>
+
+
+
+</body>
+</html>
