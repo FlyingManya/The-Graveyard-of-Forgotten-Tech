@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Background + GIFs + Enter Button</title>
+
+<!-- Preload images for faster loading -->
+<link rel="preload" href="./images/background_HH.svg" as="image">
+<link rel="preload" href="../gifs/cd_heading.gif" as="image">
+
+<!-- link the external button CSS -->
+<link rel="stylesheet" href="../css/button.css">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+
+        /* 2 layers: top → bottom */
+        background-image: 
+            url("./gifs/cd_heading.gif"),
+            url("./images/background_HH.svg");
+
+        background-repeat: no-repeat, no-repeat;
+        background-position: center center, center center;
+        background-attachment: fixed, fixed;
+        background-size: cover, cover;
+    }
+</style>
+
+</head>
+<body>
+
+<!-- HOME / ENTER button -->
+<button
+  class="haunt-btn"
+  style="
+    --btn-image: url('../buttons/enter_button.svg');
+    --btn-top: 15%;
+    --btn-left: 76%;
+    --btn-width: 180px;
+    --btn-height: 90px;
+    --btn-transform: translateX(-50%);
+    --btn-transform-active: translateX(-50%) scale(0.98);
+  "
+  onclick="window.location.href='../graveyard/graveyard.html'">
+</button>
+
+<!-- HOME / Back button -->
+<button
+  class="haunt-btn"
+  style="
+    --btn-image: url('../buttons/back_button.svg');
+    --btn-top: 32%;
+    --btn-left: 76%;
+    --btn-width: 180px;
+    --btn-height: 90px;
+    --btn-transform: translateX(-50%);
+    --btn-transform-active: translateX(-50%) scale(0.98);
+  "
+  onclick="window.location.href='../graves/cd_grave.html'">
+</button>
+ <!-- EXIT button -->
+    <button
+      class="haunt-btn"
+      style="
+        --btn-image: url('../buttons/exit_button.svg');
+        --btn-top: 6%;
+        --btn-left: 92%;
+        --btn-width: 150px;
+        --btn-height: 190px;
+      "
+      onclick="window.location.href='./menu.html'">
+</button>
+
+
+</body>
+</html>
