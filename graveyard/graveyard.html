@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Background + GIFs + Enter Button</title>
+
+<!-- Preload images for faster loading -->
+<link rel="preload" href="./images/Graveyard_background.svg" as="image">
+<link rel="preload" href="./images/tech_icons.gif" as="image">
+
+<!-- button styles -->
+<link rel="stylesheet" href="../css/button.css">
+<!-- grave styles (reusable for all graves) -->
+<link rel="stylesheet" href="../css/grave.css">
+
+<style>
+        body {
+        margin: 0;
+        padding: 0;
+         background-image: 
+            url("./images/heading.gif"),
+            url("./images/Graveyard_background.svg");
+
+        background-repeat: no-repeat, no-repeat;
+        background-position: center center, center center;
+        background-attachment: fixed, fixed;
+        background-size: cover, cover;
+        }
+
+        body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("./images/tech_icons.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        pointer-events: none;
+        z-index: 999;
+        }
+</style>
+
+</head>
+<body>
+
+    <!-- Radio Grave -->
+    <div class="grave-wrapper">
+        <div class="grave-hotspot" style="
+            --hotspot-top: 3%;
+            --hotspot-left: 6%;
+            --hotspot-width: 10%;
+            --hotspot-height: 76%;
+        " onclick="window.location.href='./menu.html'"></div>
+        <img src="./images/radio_grave.svg" alt="Radio Grave" class="grave-image">
+    </div>
+
+    <!-- Floppy Grave -->
+    <div class="grave-wrapper">
+        <div class="grave-hotspot" style="
+            --hotspot-top: 33%;
+            --hotspot-left: 32%;
+            --hotspot-width: 10%;
+            --hotspot-height: 35%;
+        "></div>
+        <img src="./images/floppy_grave.svg" alt="Floppy Grave" class="grave-image">
+    </div>
+
+    <!-- Letter Grave -->
+    <div class="grave-wrapper">
+        <div class="grave-hotspot" style="
+            --hotspot-top: 40%;
+            --hotspot-left: 52%;
+            --hotspot-width: 10%;
+            --hotspot-height: 28%;
+        "></div>
+        <img src="./images/letter_grave.svg" alt="Letter Grave" class="grave-image">
+    </div>
+
+     <!-- lamp Grave -->
+    <div class="grave-wrapper">
+        <div class="grave-hotspot" style="
+            --hotspot-top: 50%;
+            --hotspot-left: 4%;
+            --hotspot-width: 10%;
+            --hotspot-height: 42%;
+        "></div>
+        <img src="./images/lamp_grave.svg" alt="lamp Grave" class="grave-image">
+    </div>
+
+     <!-- camera Grave -->
+    <div class="grave-wrapper">
+        <div class="grave-hotspot" style="
+            --hotspot-top: 60%;
+            --hotspot-left: 65%;
+            --hotspot-width: 10%;
+            --hotspot-height: 38%;
+        "></div>
+        <img src="./images/camera_grave.svg" alt="camera Grave" class="grave-image">
+    </div>
+
+     <!-- cd Grave -->
+    <div class="grave-wrapper">
+        <div class="grave-hotspot" style="
+            --hotspot-top: 40%;
+            --hotspot-left: 78%;
+            --hotspot-width: 20%;
+            --hotspot-height: 56%;
+        "></div>
+        <img src="./images/cd_grave.svg" alt="cd Grave" class="grave-image">
+    </div>
+
+     <!-- telephone Grave -->
+    <div class="grave-wrapper">
+        <div class="grave-hotspot" style="
+            --hotspot-top: 65%;
+            --hotspot-left: 20%;
+            --hotspot-width: 13%;
+            --hotspot-height: 32%;
+        "></div>
+        <img src="./images/telephone_grave.svg" alt="telephone Grave" class="grave-image">
+    </div>
+
+     <!-- projector Grave -->
+    <div class="grave-wrapper">
+        <div class="grave-hotspot" style="
+            --hotspot-top: 65%;
+            --hotspot-left: 35%;
+            --hotspot-width: 12%;
+            --hotspot-height: 31%;
+        "></div>
+        <img src="./images/projector_grave.svg" alt="projector Grave" class="grave-image">
+    </div>
+
+     <!-- cassette Grave -->
+    <div class="grave-wrapper">
+        <div class="grave-hotspot" style="
+            --hotspot-top: 72%;
+            --hotspot-left: 49%;
+            --hotspot-width: 10%;
+            --hotspot-height: 24%;
+        "></div>
+        <img src="./images/cassette_grave.svg" alt="cassette Grave" class="grave-image">
+    </div>
+
+    <!-- EXIT button -->
+    <button
+      class="haunt-btn"
+      style="
+        --btn-image: url('../buttons/exit_button.svg');
+        --btn-top: 6%;
+        --btn-left: 92%;
+        --btn-width: 150px;
+        --btn-height: 190px;
+      "
+      onclick="window.location.href='./menu.html'">
+    </button>
+
+</body>
+</html>

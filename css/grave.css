@@ -1,0 +1,43 @@
+/* Reusable grave styles */
+
+/* Wrapper to contain both hotspot + image */
+.grave-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* The grave image itself */
+.grave-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: filter 0.3s ease;
+    pointer-events: none;
+}
+
+/* Invisible hotspot rectangle */
+.grave-hotspot {
+    position: absolute;
+    pointer-events: auto;
+    z-index: 10;
+    
+    /* Debug outline - remove these two lines when done
+    outline: 2px dashed red;
+    background-color: rgba(255, 0, 0, 0.15); */
+    
+    /* Position via CSS variables */
+    top: var(--hotspot-top, 26%);
+    left: var(--hotspot-left, 6%);
+    width: var(--hotspot-width, 10%);
+    height: var(--hotspot-height, 50%);
+}
+
+/* Glow effect when hovering the hotspot */
+.grave-hotspot:hover ~ .grave-image {
+    filter: drop-shadow(0 0 6px #00ffff)
+            drop-shadow(0 0 12px #00ffff);
+}
