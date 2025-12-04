@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SVG Background + GIFs + Enter Button</title>
 
+<!-- Preload images for faster loading -->
+<link rel="preload" href="../images/special_mentions_background.svg" as="image" fetchpriority="high">
+
 <!-- link the external button CSS -->
 <link rel="stylesheet" href="../css/button.css">
 
@@ -12,8 +15,9 @@
     body {
         margin: 0;
         padding: 0;
+        background-color: #1a1a2e;
 
-        /* 3 layers: top → bottom */
+        /* Background layer */
         background-image: 
             url("../images/special_mentions_background.svg");
 

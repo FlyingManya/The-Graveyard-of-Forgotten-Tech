@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SVG Background + GIFs + Enter Button</title>
 
-<!-- Preload images for faster loading -->
-<link rel="preload" href="../images/intro_background.svg" as="image">
+<!-- Preload images for faster loading - SVG first -->
+<link rel="preload" href="../images/intro_background.svg" as="image" fetchpriority="high">
 <link rel="preload" href="../gifs/run_boy.gif" as="image">
 <link rel="preload" href="../gifs/intro_heading.gif" as="image">
 
@@ -17,8 +17,9 @@
     body {
         margin: 0;
         padding: 0;
+        background-color: #1a1a2e;
 
-        /* 3 layers: top → bottom */
+        /* 3 layers: first = top layer, last = bottom layer */
         background-image: 
             url("../gifs/intro_heading.gif"),
             url("../gifs/run_boy.gif"),

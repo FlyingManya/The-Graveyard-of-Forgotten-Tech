@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SVG Background + GIFs + Enter Button</title>
 
-<!-- Preload images for faster loading -->
-<link rel="preload" href="../images/home_background.svg" as="image">
-<link rel="preload" href="../gifs/ghost.gif" as="image">
+<!-- Preload images for faster loading - SVG first for base layer -->
+<link rel="preload" href="../images/home_background.svg" as="image" fetchpriority="high">
 <link rel="preload" href="../gifs/heading.gif" as="image">
+<link rel="preload" href="../gifs/ghost.gif" as="image">
 
 <!-- link the external button CSS -->
 <link rel="stylesheet" href="../css/button.css">
@@ -17,8 +17,9 @@
     body {
         margin: 0;
         padding: 0;
+        background-color: #1a1a2e; /* Fallback color while loading */
 
-        /* 3 layers: top → bottom */
+        /* 3 layers: first = top layer, last = bottom layer */
         background-image: 
             url("../gifs/heading.gif"),
             url("../gifs/ghost.gif"),
