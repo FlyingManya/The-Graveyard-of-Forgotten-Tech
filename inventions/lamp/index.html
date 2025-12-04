@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambient Mood Lamp - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .lamp-container {
+            position: relative;
+            width: 200px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lamp-top {
+            width: 80px;
+            height: 30px;
+            background: linear-gradient(180deg, #2a2a3e 0%, #1a1a2e 100%);
+            border-radius: 10px 10px 0 0;
+            border: 2px solid #3a3a4e;
+        }
+
+        .lamp-glass {
+            position: relative;
+            width: 180px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: 0 0 60px var(--glow-color, rgba(90, 79, 240, 0.4));
+            transition: box-shadow 0.5s ease;
+        }
+
+        .lamp-base {
+            width: 100px;
+            height: 40px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #2a2a3e 100%);
+            border-radius: 0 0 15px 15px;
+            border: 2px solid #3a3a4e;
+            margin-top: -2px;
+        }
+
+        .lava-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(20px);
+            opacity: 0.8;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .blob1 {
+            width: 80px;
+            height: 80px;
+            background: var(--color1, #5A4FF0);
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .blob2 {
+            width: 100px;
+            height: 100px;
+            background: var(--color2, #7A7AF5);
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .blob3 {
+            width: 60px;
+            height: 60px;
+            background: var(--color1, #5A4FF0);
+            left: 40%;
+            animation-delay: 4s;
+        }
+
+        .blob4 {
+            width: 70px;
+            height: 70px;
+            background: var(--color2, #7A7AF5);
+            right: 30%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(350px) scale(1);
+            }
+            50% {
+                transform: translateY(20px) scale(1.1);
+            }
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 300px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .mood-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .mood-btn {
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .mood-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .mood-btn.active {
+            border-color: var(--color1, #5A4FF0);
+            background: var(--color1, #5A4FF0);
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color1, #5A4FF0);
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color1, #5A4FF0);
+            cursor: pointer;
+            border: none;
+        }
+
+        .toggle-btn {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-btn.active {
+            background: var(--color1, #5A4FF0);
+            border-color: var(--color1, #5A4FF0);
+        }
+
+        .value-display {
+            text-align: right;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .audio-visualizer {
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            padding: 5px;
+            overflow: hidden;
+        }
+
+        .audio-bar {
+            flex: 1;
+            background: var(--color1, #5A4FF0);
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lamp-container">
+            <div class="lamp-top"></div>
+            <div class="lamp-glass" id="lampGlass">
+                <div class="lava-blob blob1"></div>
+                <div class="lava-blob blob2"></div>
+                <div class="lava-blob blob3"></div>
+                <div class="lava-blob blob4"></div>
+            </div>
+            <div class="lamp-base"></div>
+        </div>
+
+        <div class="controls">
+            <h2>🕯️ Mood Assistant</h2>
+            
+            <div class="control-group">
+                <label>Select Mood</label>
+                <div class="mood-buttons">
+                    <button class="mood-btn active" data-mood="calm">😌 Calm</button>
+                    <button class="mood-btn" data-mood="happy">😊 Happy</button>
+                    <button class="mood-btn" data-mood="focused">🎯 Focused</button>
+                    <button class="mood-btn" data-mood="stressed">😰 Stressed</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Brightness</label>
+                <input type="range" id="brightness" min="0" max="100" value="70">
+                <div class="value-display" id="brightnessValue">70%</div>
+            </div>
+
+            <div class="control-group">
+                <label>Animation Speed</label>
+                <input type="range" id="speed" min="1" max="10" value="5">
+                <div class="value-display" id="speedValue">5x</div>
+            </div>
+
+            <div class="control-group">
+                <label>Audio Reactive Mode</label>
+                <button class="toggle-btn" id="audioToggle">Enable Audio</button>
+                <div class="audio-visualizer" id="audioViz" style="display: none; margin-top: 10px;">
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                    <div class="audio-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const moods = {
+            calm: { color1: '#5A4FF0', color2: '#7A7AF5', glow: 'rgba(90, 79, 240, 0.6)' },
+            happy: { color1: '#FFD45E', color2: '#FF9B42', glow: 'rgba(255, 212, 94, 0.6)' },
+            focused: { color1: '#00D4C2', color2: '#15F5D1', glow: 'rgba(0, 212, 194, 0.6)' },
+            stressed: { color1: '#FF6C6C', color2: '#E63946', glow: 'rgba(255, 108, 108, 0.6)' }
+        };
+
+        let currentMood = 'calm';
+        let audioActive = false;
+        let audioInterval;
+
+        // Mood selection
+        document.querySelectorAll('.mood-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMood = btn.dataset.mood;
+                updateLampColors();
+            });
+        });
+
+        // Brightness control
+        const brightnessSlider = document.getElementById('brightness');
+        const brightnessValue = document.getElementById('brightnessValue');
+        brightnessSlider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            brightnessValue.textContent = value + '%';
+            document.getElementById('lampGlass').style.opacity = value / 100;
+        });
+
+        // Speed control
+        const speedSlider = document.getElementById('speed');
+        const speedValue = document.getElementById('speedValue');
+        speedSlider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            speedValue.textContent = value + 'x';
+            const duration = 10 - value;
+            document.querySelectorAll('.lava-blob').forEach(blob => {
+                blob.style.animationDuration = duration + 's';
+            });
+        });
+
+        // Audio toggle
+        const audioToggle = document.getElementById('audioToggle');
+        const audioViz = document.getElementById('audioViz');
+        audioToggle.addEventListener('click', () => {
+            audioActive = !audioActive;
+            audioToggle.classList.toggle('active');
+            audioToggle.textContent = audioActive ? 'Disable Audio' : 'Enable Audio';
+            audioViz.style.display = audioActive ? 'flex' : 'none';
+            
+            if (audioActive) {
+                startAudioSimulation();
+            } else {
+                stopAudioSimulation();
+            }
+        });
+
+        function updateLampColors() {
+            const mood = moods[currentMood];
+            document.documentElement.style.setProperty('--color1', mood.color1);
+            document.documentElement.style.setProperty('--color2', mood.color2);
+            document.documentElement.style.setProperty('--glow-color', mood.glow);
+        }
+
+        function startAudioSimulation() {
+            const bars = document.querySelectorAll('.audio-bar');
+            audioInterval = setInterval(() => {
+                bars.forEach(bar => {
+                    const height = Math.random() * 100;
+                    bar.style.height = height + '%';
+                });
+                
+                // Pulse lamp on beat
+                const intensity = Math.random();
+                if (intensity > 0.7) {
+                    document.getElementById('lampGlass').style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        document.getElementById('lampGlass').style.transform = 'scale(1)';
+                    }, 100);
+                }
+            }, 150);
+        }
+
+        function stopAudioSimulation() {
+            if (audioInterval) {
+                clearInterval(audioInterval);
+            }
+        }
+
+        // Initialize
+        updateLampColors();
+        document.getElementById('lampGlass').style.transition = 'all 0.3s ease';
+    </script>
+</body>
+</html>
