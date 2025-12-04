@@ -1,0 +1,173 @@
+Here is a **clear, complete, Kiro-friendly description** of the **Lava Lamp → Ambient Mood Assistant** invention.
+This version focuses on **functionality**, **behavior**, **features**, and **what Kiro should build**, written like a *project specification* Kiro can directly act on.
+
+---
+
+# 🕯️ **Lava Lamp – Ambient Mood Assistant**
+
+### *Specification & Functional Description (for Kiro to develop)*
+
+The **Ambient Mood Assistant** is a modern reinterpretation of a classic **lava lamp**, redesigned to act as an intelligent, atmospheric device inside a room.
+It keeps the familiar retro aesthetic—liquid blobs slowly drifting in a glass tube—but hidden inside are sensors, smart lighting systems, and a simple AI mood engine.
+
+---
+
+## 🎯 **Core Concept**
+
+Rebuild a lava lamp as a **smart ambient device** that changes color, glow intensity, and motion patterns based on:
+
+* the user’s mood
+* ambient sound or music
+* room light levels
+* optional user input (button, app, or UI controls)
+
+The lamp becomes a **calming, emotional indicator**—a decorative object that also reacts to the environment.
+
+---
+
+## 🧩 **Functional Requirements**
+
+### 1. **Real-Time Mood Detection**
+
+The lamp should change its color theme based on sensed mood inputs.
+Inputs can be simulated for demo purposes. For example:
+
+* “calm” → soft blues and purples
+* “focused” → teal or white
+* “stressed” → warm orange or red
+* “happy” → bright yellows or multicolor drift
+
+Mood input can come from:
+
+* a mock API
+* manual controls
+* random generator
+* text input from the user
+
+Kiro should create the logic for interpreting mood → lamp color.
+
+---
+
+### 2. **Audio-Reactive Lighting**
+
+The lamp should react to ambient sound or music:
+
+* Glow pulses to the beat
+* Color intensifies with volume
+* Slow morphing for ambient soundscapes
+
+Kiro should implement:
+
+* audio input (real or simulated)
+* basic amplitude detection
+* visual response mapping
+
+---
+
+### 3. **Color & Glow Engine**
+
+The lamp uses animated gradients or shape morphing to simulate lava-like movement.
+Kiro should build:
+
+* smooth transitions between color states
+* a continuous “floating blob” animation (CSS, Canvas, or WebGL)
+* ambient glow that extends onto the UI background
+
+---
+
+### 4. **Smart Home Integration (Optional Feature)**
+
+If possible, add API endpoints or mock functions so the lamp can:
+
+* turn on/off based on time
+* shift color based on weather
+* set modes (sleep, focus, relax, nightlight)
+
+Kiro should structure the project so new triggers can be easily added.
+
+---
+
+### 5. **Interactive Web UI (to simulate the lamp)**
+
+Kiro should create a UI component representing the lamp:
+
+* A tall glass-like container
+* Animated "lava blobs" inside
+* Light bloom around the lamp
+* Controls on the side:
+
+  * Select mood
+  * Toggle audio-reactive mode
+  * Adjust brightness
+  * Change color theme
+
+This UI should feel like a modern digital twin of a lava lamp.
+
+---
+
+## 🧱 **Behavior Logic (Kiro Implementation Guide)**
+
+### Color Mapping:
+
+```
+calm → #5A4FF0, #7A7AF5
+happy → #FFD45E, #FF9B42
+focused → #00D4C2, #15F5D1
+stressed → #FF6C6C, #E63946
+neutral → soft white, low glow
+```
+
+### Animation:
+
+* Blob movement should be sinusoidal and slow (like real wax).
+* Intensity increases during high emotional states.
+* Drop shadows and outer glow change with brightness.
+
+### Audio Mode:
+
+* Peak detection → quick glow bursts
+* Quiet moments → slow drifting colors
+
+---
+
+## 🧰 **Technical Requirements (for Kiro)**
+
+### Frontend Stack:
+
+* Next.js or React
+* Tailwind CSS for styling
+* Framer Motion or GSAP for blob animation
+* Howler.js or Web Audio API for sound analysis
+
+### Components to Build:
+
+* `<LampContainer />` — the glass lamp UI
+* `<LavaBlob />` — animated organic shapes
+* `<GlowLayer />` — outer glow and bloom
+* `<MoodControls />` — buttons/sliders
+* `<AudioVisualizer />` — sound-reactive engine
+
+### Data Structures:
+
+* moodState
+* audioLevel
+* colorPalette
+* brightness
+* animationSpeed
+
+### Outputs:
+
+* An interactive digital lava lamp
+* Smooth mood transitions
+* Responsive color and glow
+* Optional smart triggers
+
+---
+
+## ✨ **Final Description for Kiro**
+
+Build a **reactive ambient lava lamp component** that animates lava blobs inside a glowing glass container. The lamp changes its color theme and glow intensity based on mood, sound, or user-selected modes. Implement smooth transitions, soft lighting, and audio-reactive behavior. Include UI controls for mood selection, brightness, and animation speed. Use modern styling (Tailwind), animation libraries, and optional audio analysis to simulate a functioning smart lamp. The final result should feel immersive, atmospheric, and calming — a digital resurrection of the classic lava lamp with emotion-sensing features.
+
+---
+
+If you want, I can also generate **full specs** for Kiro (`.kiro/specs/lamp.yaml`), **component trees**, or **UI sketches** for the lamp.
