@@ -17,20 +17,53 @@
         margin: 0;
         padding: 0;
 
-        /* 2 layers: top → bottom */
+        /* 3 layers: top → bottom (BELL.gif on top) */
         background-image: 
+            url("./animated_char/BELL.gif"),
             url("./gifs/telephone_heading.gif"),
             url("./images/background_HH.svg");
 
-        background-repeat: no-repeat, no-repeat;
-        background-position: center center, center center;
-        background-attachment: fixed, fixed;
-        background-size: cover, cover;
+        background-repeat: no-repeat, no-repeat, no-repeat;
+        background-position: center center, center center, center center;
+        background-attachment: fixed, fixed, fixed;
+        background-size: cover, cover, cover;
     }
 </style>
 
 </head>
 <body>
+
+<!-- BELL audio -->
+<audio id="bellAudio" loop>
+    <source src="./animated_char/BELL.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    // Play audio on page load and any user interaction
+    const audio = document.getElementById('bellAudio');
+    
+    // Try to play immediately
+    const playAudio = () => {
+        audio.play().catch(err => {
+            console.log('Autoplay blocked, waiting for user interaction');
+        });
+    };
+    
+    // Attempt to play on load
+    window.addEventListener('load', playAudio);
+    
+    // Play on first user interaction (click, touch, or keypress)
+    const enableAudio = () => {
+        audio.play();
+        document.removeEventListener('click', enableAudio);
+        document.removeEventListener('touchstart', enableAudio);
+        document.removeEventListener('keydown', enableAudio);
+    };
+    
+    document.addEventListener('click', enableAudio);
+    document.addEventListener('touchstart', enableAudio);
+    document.addEventListener('keydown', enableAudio);
+</script>
 
 <!-- HOME / ENTER button -->
 <button

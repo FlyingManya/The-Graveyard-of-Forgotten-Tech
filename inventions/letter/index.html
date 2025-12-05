@@ -366,11 +366,122 @@
         }
         .wax-seal { width: 60px; height: 60px; background: radial-gradient(circle, #8B0000 0%, #5a0000 100%); border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; box-shadow: 0 4px 15px rgba(139, 0, 0, 0.5); }
         .empty-mailbox { text-align: center; color: rgba(255, 255, 255, 0.5); padding: 40px 20px; font-style: italic; }
-        @media (max-width: 768px) { .container { flex-direction: column; } .paper-section, .mailbox-section { max-width: 100%; } }
+        .help-btn { position: fixed; top: 20px; right: 20px; padding: 12px 24px; background: rgba(138, 43, 226, 0.4); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 12px; color: white; cursor: pointer; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); z-index: 1000; font-family: 'Georgia', serif; font-size: 14px; }
+        .help-btn:hover { background: rgba(138, 43, 226, 0.6); transform: translateY(-2px); }
+        .help-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 3000; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
+        .help-overlay.active { display: flex; }
+        .help-content { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 40px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.5); max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(138, 43, 226, 0.4); position: relative; }
+        .help-content::-webkit-scrollbar { width: 8px; }
+        .help-content::-webkit-scrollbar-thumb { background: rgba(138, 43, 226, 0.5); border-radius: 4px; }
+        .help-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; transition: all 0.3s ease; }
+        .help-close:hover { background: rgba(138, 43, 226, 0.3); transform: rotate(90deg); }
+        .help-title { font-size: 32px; color: #ffaa00; margin-bottom: 20px; text-shadow: 0 0 15px rgba(255, 170, 0, 0.5); }
+        .help-section { margin: 25px 0; }
+        .help-section h3 { color: #8a2be2; font-size: 22px; margin-bottom: 15px; }
+        .help-section p { line-height: 1.8; margin-bottom: 15px; color: rgba(255, 255, 255, 0.9); }
+        .help-section ul { margin-left: 25px; line-height: 1.8; }
+        .help-section li { margin: 10px 0; color: rgba(255, 255, 255, 0.9); }
+        .help-highlight { background: rgba(138, 43, 226, 0.1); border-left: 4px solid #8a2be2; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        @media (max-width: 768px) { .container { flex-direction: column; } .paper-section, .mailbox-section { max-width: 100%; } .help-btn { top: 80px; } }
     </style>
 </head>
 <body>
     <a href="../../Labs/letter_lab.html" class="back-link">← Back to Lab</a>
+    <button class="help-btn" id="helpBtn">📖 Read Description</button>
+    
+    <div class="help-overlay" id="helpOverlay">
+        <div class="help-content">
+            <div class="help-close" id="helpClose">×</div>
+            <h2 class="help-title">💌 Digital Pen Pal - Handwritten Letters</h2>
+            
+            <div class="help-section">
+                <h3>🎯 What Is This?</h3>
+                <p>This is a reimagined letter-writing system that brings back the <strong>joy of pen pal correspondence</strong> with a digital twist. Write heartfelt letters in beautiful handwriting styles, send them to anonymous pen pals, and experience the anticipation of waiting for delivery.</p>
+                <div class="help-highlight">
+                    <strong>The Magic:</strong> Letters are delivered with realistic delays, sealed with wax, and opened with satisfying animations—just like real mail!
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h3>🎮 How to Use</h3>
+                <p><strong>Writing a Letter:</strong></p>
+                <ul>
+                    <li>Type your message in the vintage paper textarea</li>
+                    <li>Your text appears in beautiful handwriting style</li>
+                    <li>Choose to send <strong>anonymously</strong> or with your name</li>
+                    <li>Select a recipient or choose "Random Pen Pal"</li>
+                </ul>
+                
+                <p><strong>Switching Users:</strong></p>
+                <ul>
+                    <li>Use the "Login as User" dropdown to switch between Alice, Bob, and Charlie</li>
+                    <li>Each user has their own mailbox and sent letters</li>
+                    <li>Try all three to experience the full pen pal system!</li>
+                </ul>
+
+                <p><strong>Handwriting Styles:</strong></p>
+                <ul>
+                    <li><strong>Cursive:</strong> Flowing, elegant script</li>
+                    <li><strong>Vintage:</strong> Typewriter-style monospace</li>
+                    <li><strong>Elegant:</strong> Classic serif font</li>
+                </ul>
+
+                <p><strong>Delivery Options:</strong></p>
+                <ul>
+                    <li><strong>Instant (Demo):</strong> 5 seconds for testing</li>
+                    <li><strong>Quick:</strong> 30 seconds delivery time</li>
+                    <li><strong>Schedule Date & Time:</strong> Send letters in the future</li>
+                </ul>
+
+                <p><strong>Reading Letters:</strong></p>
+                <ul>
+                    <li>Check your mailbox for new letters (marked with ✉️ New)</li>
+                    <li>Click an envelope to open it</li>
+                    <li>Click the sealed envelope to break the wax seal</li>
+                    <li>Watch the letter pop out with animation</li>
+                    <li>Click "Reply" to respond to the sender</li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h3>✨ Special Features</h3>
+                <ul>
+                    <li><strong>Vintage Paper Design:</strong> Authentic aged paper with texture</li>
+                    <li><strong>Wax Seal Animation:</strong> Break the seal to open letters</li>
+                    <li><strong>Delivery Tracking:</strong> Watch your letter's journey with progress bar</li>
+                    <li><strong>Anonymous Sending:</strong> Send letters without revealing your identity</li>
+                    <li><strong>Scheduled Delivery:</strong> Send letters to arrive at specific times</li>
+                    <li><strong>3-User System:</strong> Experience pen pal exchanges between characters</li>
+                    <li><strong>Read/Unread Status:</strong> Track which letters you've opened</li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h3>💡 Tips</h3>
+                <div class="help-highlight">
+                    <ul style="margin: 0;">
+                        <li>Switch between users to see letters from different perspectives</li>
+                        <li>Try sending anonymous letters for mystery pen pal fun</li>
+                        <li>Use scheduled delivery for birthday or special occasion letters</li>
+                        <li>Experiment with different handwriting styles</li>
+                        <li>Reply to letters to create ongoing conversations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h3>🎨 Why This Matters</h3>
+                <p>In our instant-messaging world, this letter system brings back:</p>
+                <ul>
+                    <li><strong>Thoughtful Communication:</strong> Take time to craft meaningful messages</li>
+                    <li><strong>Anticipation:</strong> The joy of waiting for a letter to arrive</li>
+                    <li><strong>Personal Touch:</strong> Handwriting styles add character and warmth</li>
+                    <li><strong>Slower Pace:</strong> Escape the pressure of instant replies</li>
+                    <li><strong>Meaningful Connections:</strong> Build deeper relationships through letters</li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <h1 class="title">💌 Digital Pen Pal Letters 👻</h1>
         <div class="paper-section">
@@ -826,6 +937,31 @@ The words will appear in beautiful handwriting style."></textarea>
         document.getElementById('letterContent').style.fontFamily = styles[currentStyle];
         updateSignature();
         renderMailbox();
+        
+        // Help modal functionality
+        const helpOverlay = document.getElementById('helpOverlay');
+        const helpBtn = document.getElementById('helpBtn');
+        const helpClose = document.getElementById('helpClose');
+
+        helpBtn.addEventListener('click', () => {
+            helpOverlay.classList.add('active');
+        });
+
+        helpClose.addEventListener('click', () => {
+            helpOverlay.classList.remove('active');
+        });
+
+        helpOverlay.addEventListener('click', (e) => {
+            if (e.target === helpOverlay) {
+                helpOverlay.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && helpOverlay.classList.contains('active')) {
+                helpOverlay.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>

@@ -226,12 +226,115 @@
         .mood-entry-time { font-weight: 600; color: rgba(255, 255, 255, 0.9); }
         .selected-date-title { font-size: 13px; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px; font-weight: 500; }
         .no-entries { font-size: 12px; color: rgba(255, 255, 255, 0.5); text-align: center; padding: 15px; font-style: italic; }
-        @media (max-width: 1200px) { .container { flex-direction: column; align-items: center; gap: 30px; } }
+        .help-btn { position: fixed; top: 20px; right: 20px; padding: 12px 24px; background: rgba(138, 43, 226, 0.4); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 12px; color: white; cursor: pointer; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); z-index: 1000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; }
+        .help-btn:hover { background: rgba(138, 43, 226, 0.6); transform: translateY(-2px); }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 40px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.5); max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(138, 43, 226, 0.4); position: relative; }
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(138, 43, 226, 0.5); border-radius: 4px; }
+        .modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; transition: all 0.3s ease; }
+        .modal-close:hover { background: rgba(138, 43, 226, 0.3); transform: rotate(90deg); }
+        .modal-title { font-size: 32px; color: #ffaa00; margin-bottom: 20px; text-shadow: 0 0 15px rgba(255, 170, 0, 0.5); }
+        .modal-section { margin: 25px 0; }
+        .modal-section h3 { color: #8a2be2; font-size: 22px; margin-bottom: 15px; }
+        .modal-section p { line-height: 1.8; margin-bottom: 15px; color: rgba(255, 255, 255, 0.9); }
+        .modal-section ul { margin-left: 25px; line-height: 1.8; }
+        .modal-section li { margin: 10px 0; color: rgba(255, 255, 255, 0.9); }
+        .feature-highlight { background: rgba(138, 43, 226, 0.1); border-left: 4px solid #8a2be2; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        @media (max-width: 1200px) { .container { flex-direction: column; align-items: center; gap: 30px; } .help-btn { top: 80px; } }
         @media (max-width: 768px) { .lamp-container { transform: scale(0.8); } .calendar-section { min-width: 280px; } }
     </style>
 </head>
 <body>
     <a href="../../Labs/lamp_lab.html" class="back-link">← Back to Lab</a>
+    <button class="help-btn" id="helpBtn">📖 Read Description</button>
+    
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-close" id="modalClose">×</div>
+            <h2 class="modal-title">💡 Ambient Mood Lamp - Mood Tracker</h2>
+            
+            <div class="modal-section">
+                <h3>🎯 What Is This?</h3>
+                <p>This is a reimagined lava lamp that <strong>tracks and visualizes your mood</strong> over time. Select how you're feeling, and the lamp changes colors to match. Save your mood daily to build a visual calendar of your emotional journey.</p>
+                <div class="feature-highlight">
+                    <strong>The Magic:</strong> Your lamp becomes a living mood journal, with colors flowing like emotions and a calendar that shows your emotional patterns.
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h3>🎮 How to Use</h3>
+                <p><strong>Setting Your Mood:</strong></p>
+                <ul>
+                    <li>Click one of the 4 mood buttons: <strong>😌 Calm</strong>, <strong>😊 Happy</strong>, <strong>🎯 Focused</strong>, or <strong>😰 Stressed</strong></li>
+                    <li>Watch the lamp instantly change colors to match your mood</li>
+                    <li>The lamp glows with mood-specific colors (purple for calm, yellow for happy, teal for focused, red for stressed)</li>
+                </ul>
+                
+                <p><strong>Adjusting the Lamp:</strong></p>
+                <ul>
+                    <li><strong>Brightness:</strong> Drag the slider to control lamp intensity (0-100%)</li>
+                    <li><strong>Animation Speed:</strong> Control how fast the "lava" blobs move (1-10x)</li>
+                    <li><strong>Audio Reactive Mode:</strong> Enable to make the lamp pulse with simulated audio</li>
+                </ul>
+
+                <p><strong>Saving Your Mood:</strong></p>
+                <ul>
+                    <li>Click <strong>"💾 Save Current Mood"</strong> to record today's mood</li>
+                    <li>Your mood is saved with timestamp to the calendar</li>
+                    <li>You can save multiple moods per day</li>
+                </ul>
+
+                <p><strong>Using the Calendar:</strong></p>
+                <ul>
+                    <li>Navigate months with <strong>← →</strong> buttons</li>
+                    <li>Today's date is highlighted with a glowing border</li>
+                    <li>Days with saved moods show an emoji indicator</li>
+                    <li>Click any date to view all mood entries for that day</li>
+                    <li>Entries show time and mood type</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>✨ Special Features</h3>
+                <ul>
+                    <li><strong>4 Mood Presets:</strong> Each with unique color schemes and glow effects</li>
+                    <li><strong>Animated Lava Blobs:</strong> Floating orbs that change color with your mood</li>
+                    <li><strong>Brightness Control:</strong> Adjust lamp intensity to match your environment</li>
+                    <li><strong>Speed Control:</strong> Make the animation faster or slower</li>
+                    <li><strong>Audio Visualizer:</strong> Simulated audio bars that react to "sound"</li>
+                    <li><strong>Mood Calendar:</strong> Visual history of your emotional patterns</li>
+                    <li><strong>LocalStorage:</strong> Your mood data persists across sessions</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>💡 Tips</h3>
+                <div class="feature-highlight">
+                    <ul style="margin: 0;">
+                        <li>Save your mood multiple times a day to track changes</li>
+                        <li>Review past months to identify emotional patterns</li>
+                        <li>Use the lamp as ambient lighting while working or relaxing</li>
+                        <li>Enable audio mode for a more dynamic experience</li>
+                        <li>Lower brightness in the evening for a calming effect</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h3>🎨 Why This Matters</h3>
+                <p>Mood tracking is essential for mental health, and this lamp makes it beautiful:</p>
+                <ul>
+                    <li><strong>Visual Feedback:</strong> See your emotions reflected in real-time</li>
+                    <li><strong>Pattern Recognition:</strong> Identify triggers and trends over time</li>
+                    <li><strong>Mindfulness:</strong> Regular check-ins promote emotional awareness</li>
+                    <li><strong>Ambient Therapy:</strong> Color therapy combined with mood tracking</li>
+                    <li><strong>Private & Personal:</strong> Your emotional data stays with you</li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="lamp-section">
             <div class="title">🕯️ Haunted Mood Lamp 👻</div>
@@ -314,6 +417,31 @@
         document.getElementById('nextMonth').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
         document.getElementById('saveMoodBtn').addEventListener('click', saveMood);
         updateLampColors(); document.getElementById('lampGlass').style.transition = 'all 0.3s ease'; document.getElementById('lampGlass').style.opacity = '0.85'; renderCalendar();
+        
+        // Modal functionality
+        const modal = document.getElementById('modalOverlay');
+        const helpBtn = document.getElementById('helpBtn');
+        const closeBtn = document.getElementById('modalClose');
+
+        helpBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>

@@ -71,11 +71,101 @@
         .door-lock { font-size: 48px; transition: all 0.3s ease; }
         .door-lock.locked { color: #ff6b6b; }
         .door-lock.unlocked { color: #51cf66; }
-        @media (max-width: 1024px) { .container { flex-direction: column; } }
+        .help-btn { position: fixed; top: 20px; right: 20px; padding: 12px 24px; background: rgba(138, 43, 226, 0.4); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 12px; color: white; cursor: pointer; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); z-index: 1000; font-family: 'Georgia', serif; font-size: 14px; }
+        .help-btn:hover { background: rgba(138, 43, 226, 0.6); transform: translateY(-2px); }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 40px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.5); max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(138, 43, 226, 0.4); position: relative; }
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(138, 43, 226, 0.5); border-radius: 4px; }
+        .modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; transition: all 0.3s ease; }
+        .modal-close:hover { background: rgba(138, 43, 226, 0.3); transform: rotate(90deg); }
+        .modal-title { font-size: 32px; color: #ffaa00; margin-bottom: 20px; text-shadow: 0 0 15px rgba(255, 170, 0, 0.5); }
+        .modal-section { margin: 25px 0; }
+        .modal-section h3 { color: #8a2be2; font-size: 22px; margin-bottom: 15px; }
+        .modal-section p { line-height: 1.8; margin-bottom: 15px; color: rgba(255, 255, 255, 0.9); }
+        .modal-section ul { margin-left: 25px; line-height: 1.8; }
+        .modal-section li { margin: 10px 0; color: rgba(255, 255, 255, 0.9); }
+        .feature-highlight { background: rgba(138, 43, 226, 0.1); border-left: 4px solid #8a2be2; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        @media (max-width: 1024px) { .container { flex-direction: column; } .help-btn { top: 80px; } }
     </style>
 </head>
 <body>
     <a href="../../Labs/telephone_lab.html" class="back-link">← Back to Lab</a>
+    <button class="help-btn" id="helpBtn">📖 Read Description</button>
+    
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-close" id="modalClose">×</div>
+            <h2 class="modal-title">☎️ Smart Home Telephone</h2>
+            
+            <div class="modal-section">
+                <h3>🎯 What Is This?</h3>
+                <p>This is a reimagined rotary telephone that controls your entire smart home. Instead of making calls, each number on the dial triggers different smart devices - lights, coffee maker, music, door locks, and more!</p>
+                <div class="feature-highlight">
+                    <strong>The Magic:</strong> Dial a number like you would make a phone call, and watch your smart home respond instantly.
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h3>🎮 How to Use</h3>
+                <p><strong>Dialing Commands:</strong></p>
+                <ul>
+                    <li><strong>1</strong> - Toggle Lights (on/off)</li>
+                    <li><strong>2</strong> - Start Coffee Machine</li>
+                    <li><strong>3</strong> - Toggle Music Player</li>
+                    <li><strong>4</strong> - Toggle Door Lock</li>
+                    <li><strong>5</strong> - Adjust Thermostat (cycles: 72° → 68° → 76°)</li>
+                    <li><strong>0</strong> - Activate AI Assistant</li>
+                </ul>
+                
+                <p><strong>Visual Feedback:</strong></p>
+                <ul>
+                    <li>Watch the receiver lift when you dial</li>
+                    <li>See devices light up and animate when activated</li>
+                    <li>Check the Activity Log for command history</li>
+                    <li>Room lighting changes when lights are toggled</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>✨ Special Features</h3>
+                <ul>
+                    <li><strong>Rotary Dial Interface:</strong> Click numbers arranged in a circle like a real rotary phone</li>
+                    <li><strong>Receiver Animation:</strong> Lifts up when dialing commands</li>
+                    <li><strong>Smart Devices:</strong> 6 different controllable devices</li>
+                    <li><strong>Visual Room:</strong> See the room light up when lights are turned on</li>
+                    <li><strong>Coffee Steam:</strong> Watch steam rise when brewing coffee</li>
+                    <li><strong>Music Visualizer:</strong> Animated bars when music is playing</li>
+                    <li><strong>Thermostat Display:</strong> Shows current temperature with color coding</li>
+                    <li><strong>Activity Log:</strong> Tracks all your commands</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>💡 Tips</h3>
+                <div class="feature-highlight">
+                    <ul style="margin: 0;">
+                        <li>Try dialing 1 to see the room transform with lighting</li>
+                        <li>Dial 2 and watch the coffee machine brew with steam animation</li>
+                        <li>Use 5 multiple times to cycle through temperature settings</li>
+                        <li>Check the Activity Log to see your command history</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h3>🎨 Why This Matters</h3>
+                <p>Smart home controls are often buried in apps and menus. This rotary phone brings back:</p>
+                <ul>
+                    <li><strong>Tactile interaction</strong> - Physical dialing feels satisfying</li>
+                    <li><strong>Simplicity</strong> - One number = one action</li>
+                    <li><strong>Nostalgia</strong> - The charm of vintage technology</li>
+                    <li><strong>Accessibility</strong> - Easy to remember and use</li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <h1 class="title">☎️ Smart Home Telephone 👻</h1>
     <div class="container">
         <div class="phone-section">
@@ -350,6 +440,31 @@
         
         // Initial notification
         addNotification('System ready');
+
+        // Modal functionality
+        const modal = document.getElementById('modalOverlay');
+        const helpBtn = document.getElementById('helpBtn');
+        const closeBtn = document.getElementById('modalClose');
+
+        helpBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>

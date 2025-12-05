@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>👻 Page of Inventions - Graveyard of Forgotten Tech</title>
+
+<!-- link the external button CSS -->
+<link rel="stylesheet" href="../css/button.css">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Georgia', serif;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a0f1f 50%, #0f0a1a 100%);
+        color: white;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 60px;
+        padding-top: 20px;
+    }
+
+    .header h1 {
+        font-size: 3.5em;
+        color: #8a2be2;
+        text-shadow: 0 0 20px rgba(138, 43, 226, 0.6);
+        margin: 0;
+        animation: flicker 3s ease-in-out infinite;
+    }
+
+    .header p {
+        font-size: 1.2em;
+        color: #ffaa00;
+        margin-top: 10px;
+    }
+
+    .inventions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 80px;
+    }
+
+    .invention-card {
+        background: rgba(10, 10, 15, 0.9);
+        padding: 30px;
+        border-radius: 20px;
+        border: 2px solid rgba(138, 43, 226, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .invention-card:hover {
+        border-color: rgba(138, 43, 226, 0.6);
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(138, 43, 226, 0.3);
+    }
+
+    .invention-card h2 {
+        font-size: 2em;
+        color: #8a2be2;
+        margin: 0 0 15px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .invention-card .emoji {
+        font-size: 1.2em;
+    }
+
+    .invention-card .subtitle {
+        color: #ffaa00;
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-style: italic;
+    }
+
+    .invention-card p {
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+        font-size: 1em;
+    }
+
+    @keyframes flicker {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.95; }
+    }
+
+    /* Back button positioning */
+    .back-button-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+</style>
+
+</head>
+<body>
+
+<!-- Back button -->
+<div class="back-button-container">
+    <button
+      class="haunt-btn"
+      style="
+        --btn-image: url('../buttons/back_button.svg');
+        --btn-width: 150px;
+        --btn-height: 75px;
+        position: relative;
+      "
+      onclick="window.location.href='./menu.html'">
+    </button>
+</div>
+
+<div class="container">
+    <div class="header">
+        <h1>👻 Page of Inventions</h1>
+        <p>Vintage Technology Reimagined with Modern Magic</p>
+    </div>
+
+    <div class="inventions-grid">
+        
+        <!-- Camera -->
+        <div class="invention-card" onclick="window.location.href='../graves/camera_grave.html'">
+            <h2><span class="emoji">📷</span> Camera</h2>
+            <div class="subtitle">Film → Digital Hybrid</div>
+            <p>A vintage film camera that captures the warmth of analog photography while instantly digitizing your memories. Experience the nostalgia of film with the convenience of modern technology.</p>
+        </div>
+
+        <!-- Radio -->
+        <div class="invention-card" onclick="window.location.href='../graves/radio_grave.html'">
+            <h2><span class="emoji">📻</span> Radio</h2>
+            <div class="subtitle">Vintage → AI Storyteller</div>
+            <p>An old-fashioned radio transformed into an AI-powered storyteller. Tune in to hear personalized tales, news from the past, and spooky stories narrated just for you.</p>
+        </div>
+
+        <!-- Telephone -->
+        <div class="invention-card" onclick="window.location.href='../graves/telephone_grave.html'">
+            <h2><span class="emoji">📞</span> Telephone</h2>
+            <div class="subtitle">Rotary → Smart Home Controller</div>
+            <p>A classic rotary phone reimagined as your smart home command center. Dial numbers to control lights, temperature, and more with vintage charm.</p>
+        </div>
+
+        <!-- CD Player -->
+        <div class="invention-card" onclick="window.location.href='../graves/cd_grave.html'">
+            <h2><span class="emoji">💿</span> CD Player</h2>
+            <div class="subtitle">Player → Offline Media Hub</div>
+            <p>A CD player that serves as your personal offline media library. Store and play your favorite music, podcasts, and audiobooks without internet dependency.</p>
+        </div>
+
+        <!-- Cassette -->
+        <div class="invention-card" onclick="window.location.href='../graves/cassatte_grave.html'">
+            <h2><span class="emoji">📼</span> Cassette Recorder</h2>
+            <div class="subtitle">Recorder → AI Thought Journal</div>
+            <p>A cassette recorder that captures your thoughts and transforms them into organized journal entries. Record your day and let AI help you reflect.</p>
+        </div>
+
+        <!-- Floppy Disk -->
+        <div class="invention-card" onclick="window.location.href='../graves/floppy_grave.html'">
+            <h2><span class="emoji">💾</span> Floppy Disk</h2>
+            <div class="subtitle">Storage → Cloud Key</div>
+            <p>A floppy disk reimagined as a physical key to your cloud storage. Insert it to securely access your files with the tactile satisfaction of vintage tech.</p>
+        </div>
+
+        <!-- Lamp -->
+        <div class="invention-card" onclick="window.location.href='../graves/lamp_grave.html'">
+            <h2><span class="emoji">💡</span> Lava Lamp</h2>
+            <div class="subtitle">Lava → Mood Tracker</div>
+            <p>A mesmerizing lava lamp that changes colors based on your mood and emotions. Track your mental wellness with groovy, flowing visuals.</p>
+        </div>
+
+        <!-- Letter -->
+        <div class="invention-card" onclick="window.location.href='../graves/letter_grave.html'">
+            <h2><span class="emoji">✉️</span> Letter</h2>
+            <div class="subtitle">Mail → Digital Pen Pal</div>
+            <p>Traditional letter writing meets modern connectivity. Send beautifully formatted digital letters that feel personal and thoughtful.</p>
+        </div>
+
+        <!-- Projector -->
+        <div class="invention-card" onclick="window.location.href='../graves/projector_grave.html'">
+            <h2><span class="emoji">📽️</span> Slide Projector</h2>
+            <div class="subtitle">Slide → AR Story Viewer</div>
+            <p>An old slide projector that brings photos to life with augmented reality. Watch your memories animate and tell their own stories.</p>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

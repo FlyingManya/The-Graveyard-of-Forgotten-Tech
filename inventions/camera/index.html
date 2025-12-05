@@ -57,11 +57,114 @@
         .filter-btn { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(138, 43, 226, 0.3); color: white; padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 12px; }
         .filter-btn:hover { background: rgba(138, 43, 226, 0.2); }
         .filter-btn.active { background: rgba(138, 43, 226, 0.4); border-color: rgba(138, 43, 226, 0.8); }
-        @media (max-width: 1024px) { .main-layout { flex-direction: column; } .dual-preview { grid-template-columns: 1fr; } }
+        .help-btn { position: fixed; top: 20px; right: 20px; padding: 12px 24px; background: rgba(138, 43, 226, 0.4); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 12px; color: white; cursor: pointer; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); z-index: 1000; font-family: 'Georgia', serif; font-size: 14px; }
+        .help-btn:hover { background: rgba(138, 43, 226, 0.6); transform: translateY(-2px); }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 40px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.5); max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(138, 43, 226, 0.4); position: relative; }
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(138, 43, 226, 0.5); border-radius: 4px; }
+        .modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; transition: all 0.3s ease; }
+        .modal-close:hover { background: rgba(138, 43, 226, 0.3); transform: rotate(90deg); }
+        .modal-title { font-size: 32px; color: #ffaa00; margin-bottom: 20px; text-shadow: 0 0 15px rgba(255, 170, 0, 0.5); }
+        .modal-section { margin: 25px 0; }
+        .modal-section h3 { color: #8a2be2; font-size: 22px; margin-bottom: 15px; }
+        .modal-section p { line-height: 1.8; margin-bottom: 15px; color: rgba(255, 255, 255, 0.9); }
+        .modal-section ul { margin-left: 25px; line-height: 1.8; }
+        .modal-section li { margin: 10px 0; color: rgba(255, 255, 255, 0.9); }
+        .feature-highlight { background: rgba(138, 43, 226, 0.1); border-left: 4px solid #8a2be2; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .keyboard-shortcut { display: inline-block; background: rgba(0, 0, 0, 0.5); padding: 4px 8px; border-radius: 4px; font-family: 'Courier New', monospace; color: #ffaa00; margin: 0 5px; }
+        @media (max-width: 1024px) { .main-layout { flex-direction: column; } .dual-preview { grid-template-columns: 1fr; } .help-btn { top: 80px; } }
     </style>
 </head>
 <body>
     <a href="../../Labs/camera_lab.html" class="back-link">← Back to Lab</a>
+    <button class="help-btn" id="helpBtn">📖 Read Description</button>
+    
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-close" id="modalClose">×</div>
+            <h2 class="modal-title">📷 Film Camera - Digital Film Hybrid</h2>
+            
+            <div class="modal-section">
+                <h3>🎯 What Is This?</h3>
+                <p>This is a reimagined film camera that captures both <strong>real film photos</strong> and <strong>digital copies</strong> simultaneously. Experience the nostalgia of film photography with the convenience of instant digital previews!</p>
+                <div class="feature-highlight">
+                    <strong>The Magic:</strong> Every time you press the shutter, you get a physical film shot AND a digital backup with authentic film filters applied.
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h3>🎮 How to Use</h3>
+                <p><strong>Taking Photos:</strong></p>
+                <ul>
+                    <li>Click the <strong>red shutter button</strong> or press <span class="keyboard-shortcut">Space</span> / <span class="keyboard-shortcut">Enter</span></li>
+                    <li>Watch the flash and see your photo appear in both preview panels</li>
+                    <li>The film simulation panel shows a "developing" animation</li>
+                </ul>
+                
+                <p><strong>Advancing Film:</strong></p>
+                <ul>
+                    <li>Click <strong>"⟳ Advance Film"</strong> or press <span class="keyboard-shortcut">→</span> (right arrow)</li>
+                    <li>This prepares the camera for the next shot</li>
+                    <li>Watch the film counter decrease (starts at 36 exposures)</li>
+                </ul>
+
+                <p><strong>Changing Film Filters:</strong></p>
+                <ul>
+                    <li>Click any of the 6 filter buttons below the preview</li>
+                    <li><strong>Kodak Portra</strong> - Warm, natural colors</li>
+                    <li><strong>Fuji Superia</strong> - Vibrant, saturated tones</li>
+                    <li><strong>Ilford B&W</strong> - Classic black and white</li>
+                    <li><strong>Vintage 70s</strong> - Faded, nostalgic look</li>
+                    <li><strong>90s Disposable</strong> - High contrast, punchy colors</li>
+                    <li><strong>Cinematic</strong> - Movie-like color grading</li>
+                </ul>
+
+                <p><strong>Viewing Your Photos:</strong></p>
+                <ul>
+                    <li>Scroll through the <strong>Film Roll Gallery</strong> at the bottom</li>
+                    <li>Click any photo to view it in the preview panels</li>
+                    <li>Each photo shows its frame number (#1, #2, etc.)</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>✨ Special Features</h3>
+                <ul>
+                    <li><strong>Dual Preview System:</strong> See both digital and film-simulated versions</li>
+                    <li><strong>Developing Animation:</strong> Film preview fades in like real film development</li>
+                    <li><strong>Film Counter:</strong> Tracks remaining exposures (36 total)</li>
+                    <li><strong>Manual Controls:</strong> Shutter speed, aperture, and ISO displayed</li>
+                    <li><strong>Viewfinder Grid:</strong> Rule of thirds composition guide</li>
+                    <li><strong>Keyboard Shortcuts:</strong> Fast shooting with Space/Enter keys</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>💡 Tips</h3>
+                <div class="feature-highlight">
+                    <ul style="margin: 0;">
+                        <li>Try different filters to see how they transform your photos</li>
+                        <li>Use keyboard shortcuts for rapid shooting</li>
+                        <li>Click photos in the gallery to review them</li>
+                        <li>Watch the film counter - when it hits 0, you'll need to "reload"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h3>🎨 Why This Matters</h3>
+                <p>Film photography is experiencing a renaissance, but it's expensive and time-consuming. This hybrid camera gives you:</p>
+                <ul>
+                    <li>The <strong>joy and anticipation</strong> of film shooting</li>
+                    <li>The <strong>safety and convenience</strong> of digital backups</li>
+                    <li><strong>Authentic film aesthetics</strong> without the darkroom</li>
+                    <li>The <strong>best of both worlds</strong> - analog feel, digital flexibility</li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <h1 class="title">📷 Film Camera - Digital Film Hybrid 👻</h1>
         <div class="main-layout">
@@ -220,6 +323,31 @@
             }
             if (e.key === 'ArrowRight') {
                 advanceFilm();
+            }
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('modalOverlay');
+        const helpBtn = document.getElementById('helpBtn');
+        const closeBtn = document.getElementById('modalClose');
+
+        helpBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
             }
         });
     </script>
