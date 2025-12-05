@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Pen Pal - Handwritten Letters</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0f1f 50%, #0f0a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #2a2a2a;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            animation: spookyPulse 8s ease-in-out infinite;
+        }
+        @keyframes spookyPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+        .container { max-width: 1200px; width: 100%; padding: 40px 20px; display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
+        .back-link { position: fixed; top: 20px; left: 20px; padding: 12px 24px; background: rgba(10, 10, 15, 0.9); border: 2px solid rgba(138, 43, 226, 0.3); border-radius: 12px; color: white; text-decoration: none; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); z-index: 1000; }
+        .back-link:hover { background: rgba(138, 43, 226, 0.2); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 25px rgba(138, 43, 226, 0.4); }
+        .title { text-align: center; color: white; font-size: 36px; margin-bottom: 30px; width: 100%; text-shadow: 0 0 20px rgba(138, 43, 226, 0.6); animation: flicker 3s ease-in-out infinite; }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.95; } 75% { opacity: 0.98; } }
+        .paper-section { background: rgba(10, 10, 15, 0.9); padding: 30px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(138, 43, 226, 0.1); backdrop-filter: blur(10px); flex: 1; min-width: 320px; max-width: 600px; }
+        .paper { 
+            background: 
+                linear-gradient(135deg, transparent 10px, #f4e8c1 10px),
+                linear-gradient(225deg, transparent 10px, #f4e8c1 10px),
+                linear-gradient(315deg, transparent 10px, #f4e8c1 10px),
+                linear-gradient(45deg, transparent 10px, #f4e8c1 10px);
+            background-position: top left, top right, bottom right, bottom left;
+            background-size: 51% 51%;
+            background-repeat: no-repeat;
+            background-color: #f4e8c1;
+            padding: 40px; 
+            border-radius: 4px; 
+            box-shadow: 
+                inset 0 0 80px rgba(139, 101, 45, 0.1),
+                inset 0 0 30px rgba(139, 101, 45, 0.05),
+                0 4px 20px rgba(0, 0, 0, 0.3),
+                0 8px 40px rgba(0, 0, 0, 0.2); 
+            position: relative; 
+            min-height: 400px;
+            transform: rotate(-0.5deg);
+        }
+        .paper::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 101, 45, 0.08) 0%, transparent 3%),
+                radial-gradient(circle at 80% 70%, rgba(139, 101, 45, 0.06) 0%, transparent 4%),
+                radial-gradient(circle at 40% 80%, rgba(139, 101, 45, 0.05) 0%, transparent 3%),
+                radial-gradient(circle at 60% 20%, rgba(139, 101, 45, 0.07) 0%, transparent 3%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.05"/></svg>');
+            pointer-events: none; 
+            border-radius: 4px; 
+        }
+        .paper::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid rgba(139, 101, 45, 0.1);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        .letter-header { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 20px; 
+            font-size: 14px; 
+            color: #8b6532;
+            position: relative;
+            z-index: 10;
+        }
+        .letter-content { 
+            font-family: 'Brush Script MT', cursive, 'Georgia', serif; 
+            font-size: 18px; 
+            line-height: 2; 
+            color: #3a2a1a; 
+            min-height: 250px; 
+            border: none; 
+            outline: none; 
+            width: 100%; 
+            background: transparent; 
+            resize: none;
+            position: relative;
+            z-index: 10;
+        }
+        .letter-signature { 
+            text-align: right; 
+            margin-top: 30px; 
+            font-style: italic; 
+            color: #5a4a3a;
+            position: relative;
+            z-index: 10;
+        }
+        .controls { margin-top: 20px; }
+        .control-group { margin-bottom: 15px; }
+        .control-group label { display: block; margin-bottom: 8px; color: white; font-size: 14px; font-weight: 500; }
+        input[type="text"], select { width: 100%; padding: 10px; border: 2px solid rgba(138, 43, 226, 0.3); background: rgba(255, 255, 255, 0.05); color: white; border-radius: 8px; font-size: 14px; }
+        input[type="text"]::placeholder { color: rgba(255, 255, 255, 0.4); }
+        .style-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .style-btn { padding: 10px; border: 2px solid rgba(138, 43, 226, 0.3); background: rgba(255, 255, 255, 0.05); color: white; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 13px; }
+        .style-btn:hover { background: rgba(138, 43, 226, 0.2); transform: translateY(-2px); }
+        .style-btn.active { background: rgba(138, 43, 226, 0.4); border-color: rgba(138, 43, 226, 0.6); }
+        .send-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.6) 100%); border: none; color: white; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(138, 43, 226, 0.4); margin-top: 20px; }
+        .send-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 25px rgba(138, 43, 226, 0.6); }
+        .mailbox-section { 
+            background: 
+                linear-gradient(135deg, rgba(20, 10, 25, 0.95) 0%, rgba(10, 5, 15, 0.95) 100%);
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 2px solid rgba(138, 43, 226, 0.3); 
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.8), 
+                0 0 30px rgba(138, 43, 226, 0.2),
+                inset 0 0 50px rgba(0, 0, 0, 0.5); 
+            backdrop-filter: blur(10px); 
+            flex: 1; 
+            min-width: 320px; 
+            max-width: 400px;
+            position: relative;
+        }
+        .mailbox-section::before {
+            content: '🕷️';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            opacity: 0.3;
+            animation: swing 3s ease-in-out infinite;
+        }
+        @keyframes swing {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        .mailbox-section h2 { 
+            color: white; 
+            margin-bottom: 20px; 
+            font-size: 24px; 
+            text-align: center;
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.6);
+            position: relative;
+        }
+        .mailbox-section h2::before {
+            content: '👻';
+            margin-right: 10px;
+        }
+        .mailbox-section h2::after {
+            content: '🦇';
+            margin-left: 10px;
+        }
+        .mailbox { max-height: 500px; overflow-y: auto; }
+        .mailbox::-webkit-scrollbar { width: 6px; }
+        .mailbox::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 3px; }
+        .mailbox::-webkit-scrollbar-thumb { background: rgba(138, 43, 226, 0.4); border-radius: 3px; }
+        .envelope { background: linear-gradient(135deg, #d4c5a9 0%, #c9b896 100%); padding: 20px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); position: relative; }
+        .envelope:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+        .envelope.unread { border: 2px solid rgba(138, 43, 226, 0.5); box-shadow: 0 0 15px rgba(138, 43, 226, 0.3); }
+        .envelope-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .envelope-from { font-weight: bold; color: #2a2a2a; font-size: 16px; }
+        .envelope-status { font-size: 12px; color: #666; padding: 4px 8px; background: rgba(255, 255, 255, 0.5); border-radius: 4px; }
+        .envelope-preview { font-size: 14px; color: #555; font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .delivery-status { background: rgba(10, 10, 15, 0.9); padding: 20px; border-radius: 12px; border: 2px solid rgba(138, 43, 226, 0.3); margin-top: 15px; color: white; text-align: center; display: none; }
+        .delivery-status.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .delivery-progress { width: 100%; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; margin: 15px 0; overflow: hidden; }
+        .delivery-progress-bar { height: 100%; background: linear-gradient(90deg, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.8) 100%); border-radius: 4px; transition: width 0.5s ease; }
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.85); 
+            z-index: 2000; 
+            justify-content: center; 
+            align-items: center;
+            overflow-y: auto;
+        }
+        .modal.active { display: flex; animation: fadeIn 0.3s ease; }
+        .modal-content { 
+            background: 
+                linear-gradient(135deg, transparent 10px, #f4e8c1 10px),
+                linear-gradient(225deg, transparent 10px, #f4e8c1 10px),
+                linear-gradient(315deg, transparent 10px, #f4e8c1 10px),
+                linear-gradient(45deg, transparent 10px, #f4e8c1 10px);
+            background-position: top left, top right, bottom right, bottom left;
+            background-size: 51% 51%;
+            background-repeat: no-repeat;
+            background-color: #f4e8c1;
+            padding: 50px; 
+            border-radius: 4px; 
+            max-width: 600px; 
+            width: 90%; 
+            max-height: 80vh; 
+            overflow-y: auto; 
+            box-shadow: 
+                inset 0 0 80px rgba(139, 101, 45, 0.1),
+                inset 0 0 30px rgba(139, 101, 45, 0.05),
+                0 10px 50px rgba(0, 0, 0, 0.5); 
+            position: relative;
+            transform: rotate(-0.3deg);
+        }
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 101, 45, 0.08) 0%, transparent 3%),
+                radial-gradient(circle at 80% 70%, rgba(139, 101, 45, 0.06) 0%, transparent 4%),
+                radial-gradient(circle at 40% 80%, rgba(139, 101, 45, 0.05) 0%, transparent 3%),
+                radial-gradient(circle at 60% 20%, rgba(139, 101, 45, 0.07) 0%, transparent 3%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.05"/></svg>');
+            pointer-events: none;
+            border-radius: 4px;
+            z-index: 1;
+        }
+        .modal-content > * {
+            position: relative;
+            z-index: 2;
+        }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: rgba(138, 43, 226, 0.2); border: none; color: #2a2a2a; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: all 0.3s ease; z-index: 100; }
+        .modal-close:hover { background: rgba(138, 43, 226, 0.4); transform: rotate(90deg); }
+        
+        .envelope-view {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 40px 20px;
+        }
+        
+        .sealed-envelope {
+            position: relative;
+            width: 400px;
+            max-width: 90%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+        
+        .sealed-envelope:hover {
+            transform: scale(1.05);
+        }
+        
+        .sealed-envelope * {
+            pointer-events: none;
+        }
+        
+        .envelope-body {
+            background: linear-gradient(135deg, #d4c5a9 0%, #c9b896 100%);
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 2;
+            min-height: 200px;
+        }
+        
+        .envelope-flap {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(135deg, #c9b896 0%, #b8a785 100%);
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            z-index: 3;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .envelope-to {
+            margin-bottom: 25px;
+            color: #2a2a2a;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .envelope-from {
+            color: #2a2a2a;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .wax-seal-envelope {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #8B0000 0%, #5a0000 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            box-shadow: 0 4px 20px rgba(139, 0, 0, 0.6);
+            z-index: 4;
+            border: 3px solid #6a0000;
+        }
+        
+        .click-hint {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+            font-size: 14px;
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            z-index: 5;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        .letter-pop-in {
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) rotate(-10deg) translateY(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(-0.3deg) translateY(0);
+            }
+        }
+        .modal-letter { 
+            font-family: 'Brush Script MT', cursive, 'Georgia', serif; 
+            font-size: 18px; 
+            line-height: 2; 
+            color: #3a2a1a; 
+            white-space: pre-wrap;
+            position: relative;
+            z-index: 10;
+        }
+        .wax-seal { width: 60px; height: 60px; background: radial-gradient(circle, #8B0000 0%, #5a0000 100%); border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; box-shadow: 0 4px 15px rgba(139, 0, 0, 0.5); }
+        .empty-mailbox { text-align: center; color: rgba(255, 255, 255, 0.5); padding: 40px 20px; font-style: italic; }
+        @media (max-width: 768px) { .container { flex-direction: column; } .paper-section, .mailbox-section { max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <a href="../../Labs/letter_lab.html" class="back-link">← Back to Lab</a>
+    <div class="container">
+        <h1 class="title">💌 Digital Pen Pal Letters 👻</h1>
+        <div class="paper-section">
+            <div class="paper">
+                <div class="letter-header">
+                    <span id="dateDisplay"></span>
+                    <span>✉️</span>
+                </div>
+                <textarea class="letter-content" id="letterContent" placeholder="Dear friend,
+
+Write your heartfelt letter here...
+
+The words will appear in beautiful handwriting style."></textarea>
+                <div class="letter-signature" id="signatureDisplay">— Anonymous</div>
+            </div>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Login as User</label>
+                    <select id="currentUser">
+                        <option value="user1">👤 Alice (Dreamer)</option>
+                        <option value="user2">👤 Bob (Wanderer)</option>
+                        <option value="user3">👤 Charlie (Poet)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>
+                        <input type="checkbox" id="anonymousCheck" style="width: auto; margin-right: 8px;">
+                        Send Anonymously
+                    </label>
+                </div>
+                <div class="control-group">
+                    <label>Send To</label>
+                    <select id="recipientSelect">
+                        <option value="random">🎲 Random Pen Pal</option>
+                        <option value="user1">👤 Alice (Dreamer)</option>
+                        <option value="user2">👤 Bob (Wanderer)</option>
+                        <option value="user3">👤 Charlie (Poet)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Handwriting Style</label>
+                    <div class="style-buttons">
+                        <button class="style-btn active" data-style="cursive">Cursive</button>
+                        <button class="style-btn" data-style="vintage">Vintage</button>
+                        <button class="style-btn" data-style="elegant">Elegant</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Delivery Option</label>
+                    <select id="deliveryOption">
+                        <option value="instant">⚡ Instant (Demo - 5 sec)</option>
+                        <option value="quick">🚀 Quick (30 sec)</option>
+                        <option value="scheduled">📅 Schedule Date & Time</option>
+                    </select>
+                </div>
+                <div class="control-group" id="scheduledGroup" style="display: none;">
+                    <label>Delivery Date & Time</label>
+                    <input type="datetime-local" id="scheduledTime" style="color-scheme: dark;">
+                </div>
+                <button class="send-btn" id="sendBtn">📮 Seal & Send Letter</button>
+                <div class="delivery-status" id="deliveryStatus">
+                    <div>📬 Your letter is on its way...</div>
+                    <div class="delivery-progress">
+                        <div class="delivery-progress-bar" id="progressBar"></div>
+                    </div>
+                    <div id="statusText">Preparing envelope...</div>
+                </div>
+            </div>
+        </div>
+        <div class="mailbox-section">
+            <h2>Your Mailbox</h2>
+            <div class="mailbox" id="mailbox">
+                <div class="empty-mailbox">Your mailbox is empty.<br>Send a letter to see it here!</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="letterModal">
+        <div class="envelope-view" id="envelopeView">
+            <button class="modal-close" id="modalClose">×</button>
+            <div class="sealed-envelope">
+                <div class="envelope-flap"></div>
+                <div class="envelope-body">
+                    <div class="envelope-to">
+                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">To:</div>
+                        <div id="envelopeRecipient" style="font-weight: bold; font-size: 16px;"></div>
+                    </div>
+                    <div class="envelope-from">
+                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">From:</div>
+                        <div id="envelopeSender" style="font-weight: bold; font-size: 16px;"></div>
+                    </div>
+                </div>
+                <div class="wax-seal-envelope">👻</div>
+                <div class="click-hint">Click to open ✨</div>
+            </div>
+        </div>
+        <div class="modal-content" id="letterContent" style="display: none;">
+            <button class="modal-close" id="modalClose2">×</button>
+            <div class="letter-header">
+                <span id="modalDate"></span>
+                <span>✉️</span>
+            </div>
+            <div class="modal-letter" id="modalLetter"></div>
+            <div class="letter-signature" id="modalSignature"></div>
+            <button class="send-btn" id="replyBtn" style="margin-top: 30px; display: none;">↩️ Reply to this Letter</button>
+        </div>
+    </div>
+    <script>
+        const styles = { cursive: "'Brush Script MT', cursive", vintage: "'Courier New', monospace", elegant: "'Georgia', serif" };
+        let letters = JSON.parse(localStorage.getItem('penPalLetters')) || [];
+        let currentStyle = 'cursive';
+        
+        // Update date
+        document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        
+        // Style buttons
+        document.querySelectorAll('.style-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentStyle = btn.dataset.style;
+                document.getElementById('letterContent').style.fontFamily = styles[currentStyle];
+            });
+        });
+        
+        const users = {
+            user1: { name: 'Alice', title: 'Dreamer', emoji: '🌙' },
+            user2: { name: 'Bob', title: 'Wanderer', emoji: '🌍' },
+            user3: { name: 'Charlie', title: 'Poet', emoji: '✒️' }
+        };
+        
+        let currentUser = 'user1';
+        
+        // Update current user
+        document.getElementById('currentUser').addEventListener('change', (e) => {
+            currentUser = e.target.value;
+            updateSignature();
+            renderMailbox();
+        });
+        
+        // Anonymous checkbox
+        document.getElementById('anonymousCheck').addEventListener('change', updateSignature);
+        
+        // Delivery option
+        document.getElementById('deliveryOption').addEventListener('change', (e) => {
+            const scheduledGroup = document.getElementById('scheduledGroup');
+            if (e.target.value === 'scheduled') {
+                scheduledGroup.style.display = 'block';
+                // Set min to current time
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                document.getElementById('scheduledTime').min = now.toISOString().slice(0, 16);
+            } else {
+                scheduledGroup.style.display = 'none';
+            }
+        });
+        
+        function updateSignature() {
+            const isAnonymous = document.getElementById('anonymousCheck').checked;
+            const user = users[currentUser];
+            document.getElementById('signatureDisplay').textContent = isAnonymous ? '— Anonymous' : `— ${user.name} ${user.emoji}`;
+        }
+        
+        // Send letter
+        document.getElementById('sendBtn').addEventListener('click', () => {
+            const content = document.getElementById('letterContent').value.trim();
+            const isAnonymous = document.getElementById('anonymousCheck').checked;
+            const senderUser = users[currentUser];
+            const sender = isAnonymous ? 'Anonymous' : `${senderUser.name} ${senderUser.emoji}`;
+            
+            let recipientId = document.getElementById('recipientSelect').value;
+            
+            // Handle random recipient
+            if (recipientId === 'random') {
+                const availableUsers = Object.keys(users).filter(u => u !== currentUser);
+                recipientId = availableUsers[Math.floor(Math.random() * availableUsers.length)];
+            }
+            
+            const recipient = users[recipientId];
+            const deliveryOption = document.getElementById('deliveryOption').value;
+            
+            if (!content) {
+                alert('Please write something in your letter!');
+                return;
+            }
+            
+            let deliveryTime, scheduledDate;
+            
+            if (deliveryOption === 'scheduled') {
+                const scheduledInput = document.getElementById('scheduledTime').value;
+                if (!scheduledInput) {
+                    alert('Please select a delivery date and time!');
+                    return;
+                }
+                scheduledDate = new Date(scheduledInput);
+                const now = new Date();
+                if (scheduledDate <= now) {
+                    alert('Please select a future date and time!');
+                    return;
+                }
+                deliveryTime = scheduledDate.getTime() - now.getTime();
+            } else if (deliveryOption === 'quick') {
+                deliveryTime = 30000; // 30 seconds
+            } else {
+                deliveryTime = 5000; // 5 seconds
+            }
+            
+            const letter = {
+                id: Date.now(),
+                sender,
+                senderUserId: currentUser,
+                recipient: `${recipient.name} ${recipient.emoji}`,
+                recipientUserId: recipientId,
+                content,
+                style: currentStyle,
+                sentAt: new Date().toISOString(),
+                scheduledFor: scheduledDate ? scheduledDate.toISOString() : null,
+                deliveryTime,
+                status: 'in-transit',
+                read: false,
+                isAnonymous
+            };
+            
+            // Show delivery status
+            const statusDiv = document.getElementById('deliveryStatus');
+            const progressBar = document.getElementById('progressBar');
+            const statusText = document.getElementById('statusText');
+            statusDiv.classList.add('active');
+            progressBar.style.width = '0%';
+            
+            const statuses = [
+                'Sealing envelope with wax...',
+                'Adding ghostly stamp...',
+                'Letter leaving your desk...',
+                'Passing through the sorting office...',
+                'Traveling through the night...',
+                'Arriving at destination...'
+            ];
+            
+            let progress = 0;
+            const interval = deliveryTime / 100;
+            const statusInterval = deliveryTime / statuses.length;
+            let statusIndex = 0;
+            
+            const progressTimer = setInterval(() => {
+                progress += 1;
+                progressBar.style.width = progress + '%';
+                
+                if (progress >= (statusIndex + 1) * (100 / statuses.length) && statusIndex < statuses.length) {
+                    statusText.textContent = statuses[statusIndex];
+                    statusIndex++;
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(progressTimer);
+                    statusText.textContent = '✓ Letter delivered!';
+                    
+                    setTimeout(() => {
+                        statusDiv.classList.remove('active');
+                        letter.status = 'delivered';
+                        letter.deliveredAt = new Date().toISOString();
+                        letters.unshift(letter);
+                        localStorage.setItem('penPalLetters', JSON.stringify(letters));
+                        renderMailbox();
+                        
+                        // Clear form
+                        document.getElementById('letterContent').value = '';
+                        document.getElementById('recipientName').value = '';
+                    }, 2000);
+                }
+            }, interval);
+        });
+        
+        // Render mailbox
+        function renderMailbox() {
+            const mailbox = document.getElementById('mailbox');
+            
+            // Filter letters for current user
+            const userLetters = letters.filter(l => l.recipientUserId === currentUser);
+            
+            if (userLetters.length === 0) {
+                mailbox.innerHTML = '<div class="empty-mailbox">Your mailbox is empty.<br>Send a letter to see it here!</div>';
+                return;
+            }
+            
+            mailbox.innerHTML = '';
+            userLetters.forEach(letter => {
+                const envelope = document.createElement('div');
+                envelope.className = 'envelope' + (letter.read ? '' : ' unread');
+                
+                let statusBadge = '';
+                if (letter.status === 'in-transit') {
+                    statusBadge = '🚀 In Transit';
+                } else if (letter.status === 'delivered' && !letter.read) {
+                    statusBadge = '✉️ New';
+                } else {
+                    statusBadge = '📖 Read';
+                }
+                
+                envelope.innerHTML = `
+                    <div class="envelope-header">
+                        <div class="envelope-from">From: ${letter.sender}</div>
+                        <div class="envelope-status">${statusBadge}</div>
+                    </div>
+                    <div class="envelope-preview">${letter.content.substring(0, 50)}...</div>
+                `;
+                
+                if (letter.status === 'delivered') {
+                    envelope.addEventListener('click', () => openLetter(letter));
+                } else {
+                    envelope.style.opacity = '0.6';
+                    envelope.style.cursor = 'not-allowed';
+                }
+                
+                mailbox.appendChild(envelope);
+            });
+        }
+        
+        // Open letter modal
+        let currentLetter = null;
+        
+        function openLetter(letter) {
+            console.log('Opening letter:', letter);
+            currentLetter = letter;
+            const modal = document.getElementById('letterModal');
+            const envelopeView = document.getElementById('envelopeView');
+            const letterContent = document.getElementById('letterContent');
+            
+            // Show envelope first
+            envelopeView.style.display = 'flex';
+            letterContent.style.display = 'none';
+            letterContent.classList.remove('letter-pop-in');
+            
+            // Set envelope details
+            document.getElementById('envelopeRecipient').textContent = letter.recipient;
+            document.getElementById('envelopeSender').textContent = letter.sender;
+            
+            modal.classList.add('active');
+            console.log('Modal opened, envelope should be visible');
+        }
+        
+        // Open envelope to reveal letter (using event delegation)
+        document.getElementById('letterModal').addEventListener('click', (e) => {
+            // Check if click is on close button
+            if (e.target.id === 'modalClose' || e.target.id === 'modalClose2') {
+                return;
+            }
+            
+            // Check if click is on the envelope or its children
+            const envelope = e.target.closest('.sealed-envelope');
+            const envelopeView = document.getElementById('envelopeView');
+            
+            if ((envelope || e.target.closest('.envelope-view')) && currentLetter && envelopeView.style.display !== 'none') {
+                console.log('Envelope clicked, opening letter');
+                currentLetter.read = true;
+                localStorage.setItem('penPalLetters', JSON.stringify(letters));
+                renderMailbox();
+                
+                const letterContent = document.getElementById('letterContent');
+                
+                // Hide envelope
+                envelopeView.style.display = 'none';
+                
+                // Show letter with pop animation
+                letterContent.style.display = 'block';
+                letterContent.classList.add('letter-pop-in');
+                
+                document.getElementById('modalDate').textContent = new Date(currentLetter.sentAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                document.getElementById('modalLetter').textContent = currentLetter.content;
+                document.getElementById('modalLetter').style.fontFamily = styles[currentLetter.style];
+                document.getElementById('modalSignature').textContent = `— ${currentLetter.sender}`;
+                
+                // Show/hide reply button
+                const replyBtn = document.getElementById('replyBtn');
+                if (currentLetter.senderUserId && currentLetter.senderUserId !== currentUser) {
+                    replyBtn.style.display = 'block';
+                } else {
+                    replyBtn.style.display = 'none';
+                }
+                
+                // Remove animation class after it completes
+                setTimeout(() => {
+                    letterContent.classList.remove('letter-pop-in');
+                }, 600);
+            }
+        });
+        
+        // Reply to letter
+        document.getElementById('replyBtn').addEventListener('click', () => {
+            if (!currentLetter) return;
+            
+            // Close modal
+            closeModal();
+            
+            // Pre-fill recipient
+            const recipientSelect = document.getElementById('recipientSelect');
+            recipientSelect.value = currentLetter.senderUserId;
+            
+            // Pre-fill letter with reply template
+            const letterContent = document.getElementById('letterContent');
+            letterContent.value = `Dear ${currentLetter.sender},\n\nThank you for your letter. `;
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Focus on letter content
+            setTimeout(() => {
+                letterContent.focus();
+                letterContent.setSelectionRange(letterContent.value.length, letterContent.value.length);
+            }, 500);
+        });
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('letterModal').classList.remove('active');
+            currentLetter = null;
+            // Reset views
+            setTimeout(() => {
+                document.getElementById('envelopeView').style.display = 'flex';
+                document.getElementById('letterContent').style.display = 'none';
+            }, 300);
+        }
+        
+        document.getElementById('modalClose').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeModal();
+        });
+        document.getElementById('modalClose2').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeModal();
+        });
+        
+        // Check for delivered letters periodically
+        setInterval(() => {
+            let updated = false;
+            letters.forEach(letter => {
+                if (letter.status === 'in-transit') {
+                    const sentTime = new Date(letter.sentAt).getTime();
+                    const now = Date.now();
+                    if (now >= sentTime + letter.deliveryTime) {
+                        letter.status = 'delivered';
+                        letter.deliveredAt = new Date().toISOString();
+                        updated = true;
+                    }
+                }
+            });
+            if (updated) {
+                localStorage.setItem('penPalLetters', JSON.stringify(letters));
+                renderMailbox();
+            }
+        }, 1000);
+        
+        // Initialize
+        document.getElementById('letterContent').style.fontFamily = styles[currentStyle];
+        updateSignature();
+        renderMailbox();
+    </script>
+</body>
+</html>

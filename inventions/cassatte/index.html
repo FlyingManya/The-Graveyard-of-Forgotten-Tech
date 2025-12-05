@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cassette Recorder - AI Thought Journal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0f1f 50%, #0f0a1a 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            animation: spookyPulse 8s ease-in-out infinite;
+        }
+        @keyframes spookyPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+        .container { max-width: 1400px; width: 100%; padding: 40px 20px; margin: 0 auto; display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; }
+        .back-link { position: fixed; top: 20px; left: 20px; padding: 12px 24px; background: rgba(10, 10, 15, 0.9); border: 2px solid rgba(138, 43, 226, 0.3); border-radius: 12px; color: white; text-decoration: none; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); z-index: 1000; }
+        .back-link:hover { background: rgba(138, 43, 226, 0.2); transform: translateY(-2px); }
+        .title { text-align: center; color: white; font-size: 36px; margin-bottom: 30px; width: 100%; text-shadow: 0 0 20px rgba(138, 43, 226, 0.6); animation: flicker 3s ease-in-out infinite; }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.95; } }
+        .recorder-section { background: rgba(10, 10, 15, 0.9); padding: 40px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); flex: 1; min-width: 450px; max-width: 550px; }
+        .cassette-player { background: linear-gradient(135deg, #3a3a4e 0%, #2a2a3e 100%); padding: 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); position: relative; }
+        .cassette-window { background: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 10px; margin-bottom: 20px; position: relative; min-height: 150px; }
+        .tape-reels { display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px; }
+        .reel { width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, #1a1a2e 30%, #4a4a5e 50%, #2a2a3e 100%); position: relative; box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); }
+        .reel::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; background: #0a0a0f; border-radius: 50%; }
+        .reel.spinning { animation: spin 2s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .tape-line { height: 3px; background: linear-gradient(90deg, #8B4513 0%, #654321 50%, #8B4513 100%); margin: 0 20px; position: relative; overflow: hidden; }
+        .tape-line::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%); }
+        .tape-line.moving::before { animation: tapeMove 2s linear infinite; }
+        @keyframes tapeMove { from { left: -100%; } to { left: 100%; } }
+        .rec-indicator { position: absolute; top: 15px; right: 15px; width: 15px; height: 15px; background: #ff0000; border-radius: 50%; opacity: 0; box-shadow: 0 0 10px #ff0000; }
+        .rec-indicator.active { animation: blink 1s ease-in-out infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .waveform { height: 40px; display: flex; align-items: center; justify-content: center; gap: 3px; margin-top: 10px; }
+        .wave-bar { width: 4px; height: 10px; background: rgba(138, 43, 226, 0.6); border-radius: 2px; transition: height 0.1s ease; }
+        .controls { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .control-btn { background: linear-gradient(135deg, rgba(138, 43, 226, 0.4) 0%, rgba(75, 0, 130, 0.4) 100%); border: 2px solid rgba(138, 43, 226, 0.5); color: white; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+        .control-btn:hover { background: linear-gradient(135deg, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.6) 100%); transform: translateY(-2px); }
+        .control-btn:active { transform: translateY(0); box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5); }
+        .control-btn.recording { background: linear-gradient(135deg, rgba(255, 0, 0, 0.6) 0%, rgba(139, 0, 0, 0.6) 100%); border-color: #ff0000; }
+        .journal-section { background: rgba(10, 10, 15, 0.9); padding: 30px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); flex: 1; min-width: 450px; max-width: 600px; }
+        .transcript-panel { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 10px; min-height: 300px; max-height: 400px; overflow-y: auto; margin-bottom: 20px; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.8; border: 1px solid rgba(138, 43, 226, 0.3); }
+        .transcript-panel::-webkit-scrollbar { width: 6px; }
+        .transcript-panel::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+        .transcript-panel::-webkit-scrollbar-thumb { background: rgba(138, 43, 226, 0.5); border-radius: 3px; }
+        .typing-cursor { display: inline-block; width: 8px; height: 16px; background: rgba(138, 43, 226, 0.8); margin-left: 2px; animation: cursorBlink 1s step-end infinite; }
+        @keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .ai-summary { background: rgba(138, 43, 226, 0.1); padding: 15px; border-radius: 10px; border-left: 4px solid rgba(138, 43, 226, 0.8); margin-top: 15px; }
+        .mood-tag { display: inline-block; padding: 5px 12px; background: rgba(138, 43, 226, 0.3); border-radius: 15px; font-size: 12px; margin-right: 8px; margin-top: 8px; }
+        .cassette-archive { margin-top: 20px; }
+        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin-top: 15px; }
+        .cassette-icon { background: linear-gradient(135deg, #8B4513 0%, #654321 100%); padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: center; border: 2px solid rgba(138, 43, 226, 0.3); position: relative; }
+        .cassette-icon:hover { transform: translateY(-5px) rotate(2deg); box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4); }
+        .cassette-label { font-size: 10px; margin-top: 8px; color: rgba(255, 255, 255, 0.8); }
+        .cassette-date { font-size: 9px; color: rgba(255, 255, 255, 0.5); }
+        .prompt-box { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-size: 14px; color: rgba(255, 255, 255, 0.7); border: 1px dashed rgba(138, 43, 226, 0.3); }
+        .status-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; margin-bottom: 15px; font-size: 12px; }
+        .status-indicator { display: flex; align-items: center; gap: 8px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #51cf66; box-shadow: 0 0 10px #51cf66; }
+        .status-dot.recording { background: #ff0000; box-shadow: 0 0 10px #ff0000; animation: pulse 1s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        @media (max-width: 1024px) { .container { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <a href="../../Labs/cassatte_lab.html" class="back-link">← Back to Lab</a>
+    <div class="container">
+        <h1 class="title">📼 Cassette Recorder - AI Thought Journal 👻</h1>
+        <div class="recorder-section">
+            <div class="cassette-player">
+                <div class="cassette-window">
+                    <div class="rec-indicator" id="recIndicator"></div>
+                    <div class="tape-reels">
+                        <div class="reel" id="leftReel"></div>
+                        <div class="reel" id="rightReel"></div>
+                    </div>
+                    <div class="tape-line" id="tapeLine"></div>
+                    <div class="waveform" id="waveform">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="control-btn" id="rewindBtn" title="Rewind">⏮</button>
+                    <button class="control-btn" id="playBtn" title="Play">▶</button>
+                    <button class="control-btn" id="recordBtn" title="Record">⏺</button>
+                    <button class="control-btn" id="stopBtn" title="Stop">⏹</button>
+                    <button class="control-btn" id="ffBtn" title="Fast Forward">⏭</button>
+                </div>
+            </div>
+            <div class="prompt-box" id="promptBox">
+                💭 "How was your day today?"
+            </div>
+        </div>
+        <div class="journal-section">
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Ready to record</span>
+                </div>
+                <span id="recordTime">00:00</span>
+            </div>
+            <h3 style="margin-bottom: 15px;">📝 Live Transcript</h3>
+            <div class="transcript-panel" id="transcriptPanel">
+                <div style="color: rgba(255, 255, 255, 0.5); font-style: italic;">
+                    Press record to start capturing your thoughts...
+                </div>
+            </div>
+            <div class="ai-summary" id="aiSummary" style="display: none;">
+                <div style="font-weight: bold; margin-bottom: 10px; color: rgba(138, 43, 226, 0.9);">🧠 AI Summary</div>
+                <div id="summaryText"></div>
+                <div id="moodTags"></div>
+            </div>
+            <div class="cassette-archive">
+                <h3 style="margin-bottom: 15px;">📦 Cassette Archive</h3>
+                <div class="archive-grid" id="archiveGrid">
+                    <div class="cassette-icon">
+                        <div style="font-size: 32px;">📼</div>
+                        <div class="cassette-label">Morning Thoughts</div>
+                        <div class="cassette-date">Dec 5, 2024</div>
+                    </div>
+                    <div class="cassette-icon">
+                        <div style="font-size: 32px;">📼</div>
+                        <div class="cassette-label">Evening Reflection</div>
+                        <div class="cassette-date">Dec 4, 2024</div>
+                    </div>
+                    <div class="cassette-icon">
+                        <div style="font-size: 32px;">📼</div>
+                        <div class="cassette-label">Ideas & Goals</div>
+                        <div class="cassette-date">Dec 3, 2024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let isRecording = false;
+        let isPlaying = false;
+        let recordTime = 0;
+        let recordInterval;
+        let transcriptInterval;
+        let waveInterval;
+        
+        const sampleThoughts = [
+            "Today was really productive. I managed to finish the project I've been working on.",
+            "Feeling a bit overwhelmed with everything going on, but trying to stay positive.",
+            "Had some great ideas for the new design. Need to sketch them out tomorrow.",
+            "Grateful for the support from my team. It really makes a difference.",
+            "Thinking about taking a break this weekend. Need to recharge.",
+            "The meeting went well. Everyone seemed excited about the direction we're heading.",
+            "Feeling creative today. Might work on that side project I've been planning."
+        ];
+        
+        const prompts = [
+            "💭 \"How was your day today?\"",
+            "💭 \"What's on your mind right now?\"",
+            "💭 \"What are you grateful for?\"",
+            "💭 \"What's worrying you?\"",
+            "💭 \"What did you learn today?\"",
+            "💭 \"What are your goals for tomorrow?\""
+        ];
+        
+        function startRecording() {
+            isRecording = true;
+            recordTime = 0;
+            
+            // UI updates
+            document.getElementById('recordBtn').classList.add('recording');
+            document.getElementById('recIndicator').classList.add('active');
+            document.getElementById('leftReel').classList.add('spinning');
+            document.getElementById('rightReel').classList.add('spinning');
+            document.getElementById('tapeLine').classList.add('moving');
+            document.getElementById('statusDot').classList.add('recording');
+            document.getElementById('statusText').textContent = 'Recording...';
+            
+            // Clear previous transcript
+            document.getElementById('transcriptPanel').innerHTML = '';
+            document.getElementById('aiSummary').style.display = 'none';
+            
+            // Start timer
+            recordInterval = setInterval(() => {
+                recordTime++;
+                const mins = Math.floor(recordTime / 60);
+                const secs = recordTime % 60;
+                document.getElementById('recordTime').textContent = 
+                    `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }, 1000);
+            
+            // Simulate waveform
+            startWaveform();
+            
+            // Simulate transcription
+            simulateTranscription();
+        }
+        
+        function stopRecording() {
+            isRecording = false;
+            
+            // UI updates
+            document.getElementById('recordBtn').classList.remove('recording');
+            document.getElementById('recIndicator').classList.remove('active');
+            document.getElementById('leftReel').classList.remove('spinning');
+            document.getElementById('rightReel').classList.remove('spinning');
+            document.getElementById('tapeLine').classList.remove('moving');
+            document.getElementById('statusDot').classList.remove('recording');
+            document.getElementById('statusText').textContent = 'Processing...';
+            
+            clearInterval(recordInterval);
+            clearInterval(transcriptInterval);
+            stopWaveform();
+            
+            // Generate AI summary
+            setTimeout(() => {
+                generateSummary();
+                document.getElementById('statusText').textContent = 'Ready to record';
+                document.getElementById('recordTime').textContent = '00:00';
+                
+                // Add to archive
+                addToArchive();
+            }, 2000);
+        }
+        
+        function simulateTranscription() {
+            const thought = sampleThoughts[Math.floor(Math.random() * sampleThoughts.length)];
+            const words = thought.split(' ');
+            let wordIndex = 0;
+            
+            const panel = document.getElementById('transcriptPanel');
+            panel.innerHTML = '<span class="typing-cursor"></span>';
+            
+            transcriptInterval = setInterval(() => {
+                if (wordIndex < words.length && isRecording) {
+                    const cursor = panel.querySelector('.typing-cursor');
+                    const textNode = document.createTextNode(words[wordIndex] + ' ');
+                    panel.insertBefore(textNode, cursor);
+                    wordIndex++;
+                } else if (!isRecording) {
+                    const cursor = panel.querySelector('.typing-cursor');
+                    if (cursor) cursor.remove();
+                    clearInterval(transcriptInterval);
+                }
+            }, 300);
+        }
+        
+        function startWaveform() {
+            const bars = document.querySelectorAll('.wave-bar');
+            waveInterval = setInterval(() => {
+                bars.forEach(bar => {
+                    const height = Math.random() * 30 + 10;
+                    bar.style.height = height + 'px';
+                });
+            }, 100);
+        }
+        
+        function stopWaveform() {
+            clearInterval(waveInterval);
+            document.querySelectorAll('.wave-bar').forEach(bar => {
+                bar.style.height = '10px';
+            });
+        }
+        
+        function generateSummary() {
+            const summaries = [
+                "You reflected on your productivity and accomplishments today. Main themes: progress, teamwork, gratitude.",
+                "You expressed feeling overwhelmed but maintaining optimism. Key points: challenges, resilience, hope.",
+                "You discussed creative ideas and future plans. Themes: innovation, planning, excitement.",
+                "You shared thoughts about work-life balance and self-care. Focus: wellness, boundaries, rest."
+            ];
+            
+            const moods = [
+                { text: "Calm", color: "rgba(138, 43, 226, 0.3)" },
+                { text: "Focused", color: "rgba(0, 212, 194, 0.3)" },
+                { text: "Hopeful", color: "rgba(255, 212, 94, 0.3)" },
+                { text: "Reflective", color: "rgba(138, 43, 226, 0.3)" }
+            ];
+            
+            const summary = summaries[Math.floor(Math.random() * summaries.length)];
+            const mood = moods[Math.floor(Math.random() * moods.length)];
+            
+            document.getElementById('summaryText').textContent = summary;
+            document.getElementById('moodTags').innerHTML = 
+                `<span class="mood-tag" style="background: ${mood.color}">Mood: ${mood.text}</span>`;
+            document.getElementById('aiSummary').style.display = 'block';
+        }
+        
+        function addToArchive() {
+            const grid = document.getElementById('archiveGrid');
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            const cassette = document.createElement('div');
+            cassette.className = 'cassette-icon';
+            cassette.innerHTML = `
+                <div style="font-size: 32px;">📼</div>
+                <div class="cassette-label">${timeStr} Entry</div>
+                <div class="cassette-date">${dateStr}</div>
+            `;
+            cassette.style.animation = 'slideIn 0.5s ease';
+            grid.insertBefore(cassette, grid.firstChild);
+        }
+        
+        function changePrompt() {
+            const prompt = prompts[Math.floor(Math.random() * prompts.length)];
+            document.getElementById('promptBox').textContent = prompt;
+        }
+        
+        // Event listeners
+        document.getElementById('recordBtn').addEventListener('click', () => {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        });
+        
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            if (isRecording) {
+                stopRecording();
+            }
+        });
+        
+        document.getElementById('playBtn').addEventListener('click', () => {
+            if (!isPlaying && !isRecording) {
+                isPlaying = true;
+                document.getElementById('leftReel').classList.add('spinning');
+                document.getElementById('rightReel').classList.add('spinning');
+                document.getElementById('tapeLine').classList.add('moving');
+                document.getElementById('statusText').textContent = 'Playing...';
+                
+                setTimeout(() => {
+                    isPlaying = false;
+                    document.getElementById('leftReel').classList.remove('spinning');
+                    document.getElementById('rightReel').classList.remove('spinning');
+                    document.getElementById('tapeLine').classList.remove('moving');
+                    document.getElementById('statusText').textContent = 'Ready to record';
+                }, 3000);
+            }
+        });
+        
+        // Change prompt every 10 seconds
+        setInterval(changePrompt, 10000);
+        
+        // Archive click handlers
+        document.querySelectorAll('.cassette-icon').forEach(cassette => {
+            cassette.addEventListener('click', () => {
+                alert('📼 Opening archived entry...\n\nThis would load the saved transcript and audio.');
+            });
+        });
+    </script>
+</body>
+</html>

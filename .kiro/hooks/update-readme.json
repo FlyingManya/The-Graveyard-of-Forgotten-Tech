@@ -1,0 +1,12 @@
+{
+  "name": "Update README Reminder",
+  "description": "Reminds to update README when new inventions or major features are added",
+  "trigger": {
+    "type": "manual"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "📝 Time to update the README!\n\nPlease ensure the README.md includes:\n- List of all current inventions\n- Project structure overview\n- Setup instructions\n- Deployment information\n- Credits and acknowledgments\n- Link to live demo\n\nWould you like me to help update it?"
+  },
+  "enabled": true
+}

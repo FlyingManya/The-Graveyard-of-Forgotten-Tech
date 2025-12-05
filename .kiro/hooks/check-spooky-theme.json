@@ -1,0 +1,13 @@
+{
+  "name": "Check Spooky Theme Compliance",
+  "description": "Automatically checks if HTML files follow the spooky theme guidelines when saved",
+  "trigger": {
+    "type": "onFileSave",
+    "filePattern": "**/*.html"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "Please review the saved HTML file and check:\n1. Does the title include the 👻 ghost emoji?\n2. Does it use the spooky purple color scheme (#8a2be2)?\n3. Are there appropriate hover effects and animations?\n4. Is the back button properly linked?\n5. Does it follow the project standards in .kiro/steering/project-standards.md?\n\nIf any issues are found, suggest improvements."
+  },
+  "enabled": true
+}

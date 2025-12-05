@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CD Player - Offline Media Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0f1f 50%, #0f0a1a 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            animation: spookyPulse 8s ease-in-out infinite;
+        }
+        @keyframes spookyPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+        .container { max-width: 1200px; width: 100%; padding: 40px 20px; margin: 0 auto; display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; }
+        .back-link { position: fixed; top: 20px; left: 20px; padding: 12px 24px; background: rgba(10, 10, 15, 0.9); border: 2px solid rgba(138, 43, 226, 0.3); border-radius: 12px; color: white; text-decoration: none; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); z-index: 1000; }
+        .back-link:hover { background: rgba(138, 43, 226, 0.2); transform: translateY(-2px); }
+        .title { text-align: center; color: white; font-size: 36px; margin-bottom: 30px; width: 100%; text-shadow: 0 0 20px rgba(138, 43, 226, 0.6); animation: flicker 3s ease-in-out infinite; }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.95; } }
+        .cd-player-section { background: rgba(10, 10, 15, 0.9); padding: 40px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); flex: 1; min-width: 400px; max-width: 500px; }
+        .cd-player { background: linear-gradient(135deg, #2a2a3e 0%, #1a1a2e 100%); padding: 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+        .disc-window { width: 280px; height: 280px; margin: 0 auto 30px; background: radial-gradient(circle, #0a0a0f 0%, #1a1a2e 100%); border-radius: 50%; position: relative; box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 0 0 8px rgba(138, 43, 226, 0.3); overflow: hidden; }
+        .cd-disc { width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle at center, #1a1a2e 20%, #4a4a5e 40%, #6a6a7e 60%, #4a4a5e 80%, #2a2a3e 100%); position: relative; transition: all 0.3s ease; }
+        .cd-disc::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: radial-gradient(circle, #0a0a0f 0%, #2a2a3e 100%); border-radius: 50%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.8); }
+        .cd-disc.spinning { animation: spin 3s linear infinite; }
+        .cd-disc.fast-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .led-ring { position: absolute; top: -8px; left: -8px; right: -8px; bottom: -8px; border-radius: 50%; box-shadow: inset 0 0 20px var(--led-color, rgba(138, 43, 226, 0.6)), 0 0 30px var(--led-color, rgba(138, 43, 226, 0.4)); transition: all 0.5s ease; }
+        .lcd-display { background: #1a3a1a; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-family: 'Courier New', monospace; color: #00ff00; text-shadow: 0 0 10px #00ff00; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); }
+        .lcd-line { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px; }
+        .lcd-line:last-child { margin-bottom: 0; }
+        .controls { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
+        .control-btn { background: linear-gradient(135deg, rgba(138, 43, 226, 0.4) 0%, rgba(75, 0, 130, 0.4) 100%); border: 2px solid rgba(138, 43, 226, 0.5); color: white; padding: 15px 10px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+        .control-btn:hover { background: linear-gradient(135deg, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.6) 100%); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4); }
+        .control-btn:active { transform: translateY(0); box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5); }
+        .volume-control { display: flex; align-items: center; gap: 10px; margin-top: 15px; }
+        .volume-slider { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; -webkit-appearance: none; }
+        .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: rgba(138, 43, 226, 0.8); border-radius: 50%; cursor: pointer; }
+        .volume-slider::-moz-range-thumb { width: 18px; height: 18px; background: rgba(138, 43, 226, 0.8); border-radius: 50%; cursor: pointer; border: none; }
+        .media-section { background: rgba(10, 10, 15, 0.9); padding: 30px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); flex: 1; min-width: 400px; max-width: 500px; }
+        .media-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(138, 43, 226, 0.2); color: white; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 14px; }
+        .tab-btn:hover { background: rgba(138, 43, 226, 0.2); }
+        .tab-btn.active { background: rgba(138, 43, 226, 0.4); border-color: rgba(138, 43, 226, 0.8); }
+        .media-list { max-height: 400px; overflow-y: auto; }
+        .media-item { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(138, 43, 226, 0.2); }
+        .media-item:hover { background: rgba(138, 43, 226, 0.2); transform: translateX(5px); }
+        .media-item.playing { background: rgba(138, 43, 226, 0.3); border-color: rgba(138, 43, 226, 0.8); }
+        .media-title { font-size: 14px; font-weight: bold; margin-bottom: 5px; }
+        .media-artist { font-size: 12px; color: rgba(255, 255, 255, 0.6); }
+        .sync-panel { background: rgba(138, 43, 226, 0.1); padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center; }
+        .sync-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.6) 100%); border: none; color: white; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.3s ease; margin-top: 10px; }
+        .sync-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(138, 43, 226, 0.6); }
+        .sync-progress { width: 100%; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; margin: 15px 0; overflow: hidden; display: none; }
+        .sync-progress.active { display: block; }
+        .sync-progress-bar { height: 100%; background: linear-gradient(90deg, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.8) 100%); border-radius: 4px; transition: width 0.5s ease; width: 0%; }
+        .notification { position: fixed; top: 80px; right: 20px; background: rgba(10, 10, 15, 0.95); padding: 15px 20px; border-radius: 10px; border: 2px solid rgba(138, 43, 226, 0.5); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); animation: slideIn 0.3s ease; z-index: 1000; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+        @media (max-width: 1024px) { .container { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <a href="../../Labs/cd_lab.html" class="back-link">← Back to Lab</a>
+    <div class="container">
+        <h1 class="title">💿 CD Player - Offline Media Hub 👻</h1>
+        <div class="cd-player-section">
+            <div class="cd-player">
+                <div class="disc-window">
+                    <div class="led-ring"></div>
+                    <div class="cd-disc" id="cdDisc"></div>
+                </div>
+                <div class="lcd-display">
+                    <div class="lcd-line">
+                        <span id="trackInfo">No Track</span>
+                        <span id="trackTime">00:00</span>
+                    </div>
+                    <div class="lcd-line">
+                        <span id="artistInfo">---</span>
+                        <span id="modeInfo">IDLE</span>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="control-btn" id="prevBtn" title="Previous">⏮</button>
+                    <button class="control-btn" id="playBtn" title="Play/Pause">▶</button>
+                    <button class="control-btn" id="nextBtn" title="Next">⏭</button>
+                    <button class="control-btn" id="shuffleBtn" title="Shuffle">🔀</button>
+                    <button class="control-btn" id="repeatBtn" title="Repeat">🔁</button>
+                </div>
+                <div class="volume-control">
+                    <span>🔊</span>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
+                    <span id="volumeValue">70%</span>
+                </div>
+            </div>
+        </div>
+        <div class="media-section">
+            <h2 style="margin-bottom: 20px; text-align: center;">Media Library</h2>
+            <div class="media-tabs">
+                <button class="tab-btn active" data-tab="music">🎵 Music</button>
+                <button class="tab-btn" data-tab="podcasts">🎙️ Podcasts</button>
+                <button class="tab-btn" data-tab="audiobooks">📚 Audiobooks</button>
+            </div>
+            <div class="media-list" id="mediaList"></div>
+            <div class="sync-panel">
+                <div style="font-size: 14px; color: rgba(255, 255, 255, 0.7); margin-bottom: 10px;">
+                    Offline Mode: <span style="color: #51cf66; font-weight: bold;">Active</span>
+                </div>
+                <button class="sync-btn" id="syncBtn">📡 Sync New Content</button>
+                <div class="sync-progress" id="syncProgress">
+                    <div class="sync-progress-bar" id="syncProgressBar"></div>
+                </div>
+                <div id="syncStatus" style="font-size: 12px; color: rgba(255, 255, 255, 0.6); margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const mediaLibrary = {
+            music: [
+                { title: 'Midnight Dreams', artist: 'Luna Eclipse', duration: '3:45' },
+                { title: 'Neon Lights', artist: 'Synthwave Collective', duration: '4:12' },
+                { title: 'Retro Vibes', artist: 'The 80s Revival', duration: '3:28' },
+                { title: 'Digital Love', artist: 'Cyber Hearts', duration: '4:01' }
+            ],
+            podcasts: [
+                { title: 'Tech Resurrection Ep. 12', artist: 'Retro Tech Podcast', duration: '45:30' },
+                { title: 'The Future of Past', artist: 'Time Travelers', duration: '38:15' },
+                { title: 'Vintage Computing', artist: 'Byte Back', duration: '52:00' }
+            ],
+            audiobooks: [
+                { title: 'The Digital Ghost', artist: 'By Sarah Mitchell', duration: '8:12:00' },
+                { title: 'Resurrection Lab', artist: 'By Alex Turner', duration: '6:45:00' }
+            ]
+        };
+        
+        let currentTab = 'music';
+        let currentTrack = 0;
+        let isPlaying = false;
+        let isShuffle = false;
+        let isRepeat = false;
+        let currentTime = 0;
+        let timeInterval;
+        
+        const cdDisc = document.getElementById('cdDisc');
+        const playBtn = document.getElementById('playBtn');
+        const trackInfo = document.getElementById('trackInfo');
+        const artistInfo = document.getElementById('artistInfo');
+        const modeInfo = document.getElementById('modeInfo');
+        const trackTime = document.getElementById('trackTime');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+        const mediaList = document.getElementById('mediaList');
+        const ledRing = document.querySelector('.led-ring');
+        
+        // LED colors for different modes
+        const ledColors = {
+            idle: 'rgba(138, 43, 226, 0.6)',
+            music: 'rgba(0, 255, 0, 0.6)',
+            podcasts: 'rgba(138, 43, 226, 0.6)',
+            audiobooks: 'rgba(255, 105, 180, 0.6)',
+            syncing: 'rgba(255, 255, 255, 0.6)'
+        };
+        
+        function updateLED(mode) {
+            ledRing.style.setProperty('--led-color', ledColors[mode] || ledColors.idle);
+        }
+        
+        function renderMediaList() {
+            const items = mediaLibrary[currentTab];
+            mediaList.innerHTML = '';
+            
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'media-item' + (index === currentTrack && isPlaying ? ' playing' : '');
+                div.innerHTML = `
+                    <div class="media-title">${item.title}</div>
+                    <div class="media-artist">${item.artist} • ${item.duration}</div>
+                `;
+                div.addEventListener('click', () => playTrack(index));
+                mediaList.appendChild(div);
+            });
+        }
+        
+        function playTrack(index) {
+            currentTrack = index;
+            const track = mediaLibrary[currentTab][currentTrack];
+            
+            trackInfo.textContent = track.title;
+            artistInfo.textContent = track.artist;
+            modeInfo.textContent = currentTab.toUpperCase();
+            currentTime = 0;
+            
+            if (!isPlaying) {
+                togglePlay();
+            } else {
+                renderMediaList();
+            }
+            
+            updateLED(currentTab);
+        }
+        
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            
+            if (isPlaying) {
+                playBtn.textContent = '⏸';
+                cdDisc.classList.add('spinning');
+                modeInfo.textContent = 'PLAYING';
+                
+                if (trackInfo.textContent === 'No Track') {
+                    playTrack(0);
+                }
+                
+                timeInterval = setInterval(() => {
+                    currentTime++;
+                    const mins = Math.floor(currentTime / 60);
+                    const secs = currentTime % 60;
+                    trackTime.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                }, 1000);
+            } else {
+                playBtn.textContent = '▶';
+                cdDisc.classList.remove('spinning');
+                modeInfo.textContent = 'PAUSED';
+                clearInterval(timeInterval);
+            }
+            
+            renderMediaList();
+        }
+        
+        function nextTrack() {
+            if (isShuffle) {
+                currentTrack = Math.floor(Math.random() * mediaLibrary[currentTab].length);
+            } else {
+                currentTrack = (currentTrack + 1) % mediaLibrary[currentTab].length;
+            }
+            playTrack(currentTrack);
+        }
+        
+        function prevTrack() {
+            currentTrack = (currentTrack - 1 + mediaLibrary[currentTab].length) % mediaLibrary[currentTab].length;
+            playTrack(currentTrack);
+        }
+        
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                notif.remove();
+            }, 3000);
+        }
+        
+        function syncContent() {
+            const syncBtn = document.getElementById('syncBtn');
+            const syncProgress = document.getElementById('syncProgress');
+            const syncProgressBar = document.getElementById('syncProgressBar');
+            const syncStatus = document.getElementById('syncStatus');
+            
+            syncBtn.disabled = true;
+            syncBtn.textContent = '⏳ Syncing...';
+            syncProgress.classList.add('active');
+            syncProgressBar.style.width = '0%';
+            
+            cdDisc.classList.add('fast-spin');
+            updateLED('syncing');
+            
+            const steps = [
+                { progress: 20, message: 'Connecting to cloud...' },
+                { progress: 40, message: 'Downloading playlists...' },
+                { progress: 60, message: 'Syncing podcasts...' },
+                { progress: 80, message: 'Updating audiobooks...' },
+                { progress: 100, message: 'Sync complete!' }
+            ];
+            
+            let stepIndex = 0;
+            const syncInterval = setInterval(() => {
+                if (stepIndex < steps.length) {
+                    const step = steps[stepIndex];
+                    syncProgressBar.style.width = step.progress + '%';
+                    syncStatus.textContent = step.message;
+                    stepIndex++;
+                } else {
+                    clearInterval(syncInterval);
+                    cdDisc.classList.remove('fast-spin');
+                    updateLED(currentTab);
+                    
+                    setTimeout(() => {
+                        syncProgress.classList.remove('active');
+                        syncBtn.disabled = false;
+                        syncBtn.textContent = '📡 Sync New Content';
+                        syncStatus.textContent = '';
+                        showNotification('✓ New content synced successfully!');
+                    }, 1000);
+                }
+            }, 800);
+        }
+        
+        // Event listeners
+        playBtn.addEventListener('click', togglePlay);
+        document.getElementById('nextBtn').addEventListener('click', nextTrack);
+        document.getElementById('prevBtn').addEventListener('click', prevTrack);
+        
+        document.getElementById('shuffleBtn').addEventListener('click', () => {
+            isShuffle = !isShuffle;
+            document.getElementById('shuffleBtn').style.background = isShuffle ? 
+                'linear-gradient(135deg, rgba(138, 43, 226, 0.8) 0%, rgba(75, 0, 130, 0.8) 100%)' : 
+                'linear-gradient(135deg, rgba(138, 43, 226, 0.4) 0%, rgba(75, 0, 130, 0.4) 100%)';
+            showNotification(isShuffle ? 'Shuffle ON' : 'Shuffle OFF');
+        });
+        
+        document.getElementById('repeatBtn').addEventListener('click', () => {
+            isRepeat = !isRepeat;
+            document.getElementById('repeatBtn').style.background = isRepeat ? 
+                'linear-gradient(135deg, rgba(138, 43, 226, 0.8) 0%, rgba(75, 0, 130, 0.8) 100%)' : 
+                'linear-gradient(135deg, rgba(138, 43, 226, 0.4) 0%, rgba(75, 0, 130, 0.4) 100%)';
+            showNotification(isRepeat ? 'Repeat ON' : 'Repeat OFF');
+        });
+        
+        volumeSlider.addEventListener('input', (e) => {
+            volumeValue.textContent = e.target.value + '%';
+        });
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTab = btn.dataset.tab;
+                currentTrack = 0;
+                isPlaying = false;
+                playBtn.textContent = '▶';
+                cdDisc.classList.remove('spinning');
+                clearInterval(timeInterval);
+                trackInfo.textContent = 'No Track';
+                artistInfo.textContent = '---';
+                modeInfo.textContent = 'IDLE';
+                trackTime.textContent = '00:00';
+                updateLED(currentTab);
+                renderMediaList();
+            });
+        });
+        
+        document.getElementById('syncBtn').addEventListener('click', syncContent);
+        
+        // Initialize
+        updateLED('idle');
+        renderMediaList();
+    </script>
+</body>
+</html>

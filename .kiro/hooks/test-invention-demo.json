@@ -1,0 +1,13 @@
+{
+  "name": "Test Invention Demo",
+  "description": "Reminds to test key functionality when invention demo files are modified",
+  "trigger": {
+    "type": "onFileSave",
+    "filePattern": "inventions/*/index.html"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "An invention demo was updated. Please verify:\n\n✅ Interactive controls work correctly\n✅ localStorage persistence (if applicable)\n✅ Back button links to correct lab page\n✅ Spooky theme is consistent\n✅ Keyboard shortcuts function properly\n✅ Visual feedback on user actions\n✅ Responsive design on mobile\n\nWould you like me to review the changes?"
+  },
+  "enabled": true
+}

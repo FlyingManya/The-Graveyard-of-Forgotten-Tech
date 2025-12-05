@@ -1,0 +1,212 @@
+Here is a **clear, visual, Kiro-ready description** of the **UI** for the Telephone invention —
+specifically how the website should **show the coffee machine turning on, lights changing, music playing, etc.** when the user dials the phone.
+
+This describes **exactly what should appear on the screen**, how it should animate, and how the user should experience the “smart home” reacting.
+
+---
+
+# ☎️ **UI Description — Smart Home Telephone Interaction**
+
+### *How the website should visually show the home responding to each dial command*
+
+When the user enters the telephone’s “Resurrection Lab” page or haunted room, they see the **vintage rotary telephone** sitting on a small table inside a cozy, dimly lit house interior.
+
+Behind the phone is a **stylized room UI** that shows different parts of a smart home:
+
+* Lights
+* Coffee machine
+* Music player / speaker
+* Weather panel
+* Door lock indicator
+* AC / thermostat
+
+Each reacts visually whenever the user “dials” the phone.
+
+---
+
+# 🛋️ **1. Main UI Layout**
+
+The screen is divided into two key areas:
+
+### **LEFT SIDE → Telephone**
+
+* A beautifully rendered rotary phone
+* The dial rotates when the user clicks numbers
+* The phone lights up during “processing”
+* The receiver lifts slightly during “voice” actions
+
+### **RIGHT SIDE → Smart Home Reaction Panel**
+
+This is a cozy illustrated home interior with interactive components:
+
+* A lamp or ceiling lights
+* A coffee machine on a counter
+* A speaker with sound waves
+* A small window showing the weather
+* A thermostat dial
+* A door icon with lock/unlock animation
+
+Each component animates when triggered.
+
+---
+
+# 🔦 **2. Lights Turning On (Dial 1)**
+
+When the user dials **1**:
+
+* The room lights slowly brighten (from warm dim → soft glow)
+* A subtle flicker effect plays, matching old bulbs warming up
+* A label appears:
+  **“Lights turned on.”**
+* The lamp icon glows with a gentle pulse
+
+---
+
+# ☕ **3. Coffee Machine Activation (Dial 2)**
+
+When dial **2** is selected:
+
+* The coffee machine in the UI glows or lights up
+* Steam animation begins rising
+* A soft brewing sound plays for a moment
+* A message fades in:
+  **“Coffee machine starting…”**
+* A progress indicator (simple 3-dot animation) shows brewing
+
+Optional spooky touch:
+
+* The steam takes a ghostly shape for 1 second
+
+---
+
+# 🎵 **4. Music or Weather Playback (Dial 3)**
+
+Dial **3** triggers audio actions:
+
+### If Music Mode:
+
+* The speaker icon on the right begins bouncing with soft equalizer bars
+* Ambient loops or retro music plays
+* A label appears:
+  **“Playing music.”**
+
+### If Weather Mode:
+
+* The little window shows animated rain / sun / clouds
+* A radio-style voice speaks the weather
+* A label appears:
+  **“Today’s Weather:”** followed by text
+
+---
+
+# 🔐 **5. Door Lock Action (Dial 4)**
+
+Dial **4** toggles a door lock:
+
+* A door icon animates:
+
+  * lock closes with a metallic click
+* Color change:
+
+  * Green → unlocked
+  * Red → locked
+* A message appears:
+  **“Door Locked.”** or **“Door Unlocked.”**
+
+---
+
+# ❄️ **6. AC / Heater Mode (Dial 5)**
+
+Dial **5** adjusts temperature control:
+
+* The thermostat UI rotates slightly
+* Blue glow → cooling
+* Red glow → heating
+* Frost or warmth particles animate for 1–2 seconds
+
+Message:
+**“Temperature set.”**
+
+---
+
+# 📞 **7. AI Assistant Activation (Dial 0)**
+
+Dialing **0** makes the phone “wake up”:
+
+* Receiver lifts or glows
+* A white listening pulse appears around the phone
+* The house UI darkens slightly (focus mode)
+* Text animation appears:
+  **“Listening…”**
+* AI voice responds through the UI speaker or typewriter animation
+
+---
+
+# 💬 **8. Status Feedback / Notifications**
+
+Each action triggers:
+
+* A small floating notification
+* Soft sound feedback
+* Highlight/border pulse around the affected device
+
+Notifications appear in a small panel:
+
+```
+✓ Lights turned on  
+✓ Coffee machine started  
+✓ Weather reading…  
+✓ Door locked  
+```
+
+---
+
+# 🌫️ **Visual Atmosphere**
+
+To match your spooky theme:
+
+* Gentle fog overlays
+* Warm candle-like glows
+* Slightly vintage colors
+* Occasional flicker in the room lights
+* A shadow moving subtly when the phone “responds”
+
+But keep it elegant, not horror.
+
+---
+
+# 🧙 **How Kiro Should Build It**
+
+Break the home UI into components:
+
+### Components
+
+1. `<RotaryPhone />`
+2. `<HomeLights />`
+3. `<CoffeeMachine />`
+4. `<SpeakerMusic />`
+5. `<WeatherWindow />`
+6. `<DoorLockUI />`
+7. `<ThermostatControl />`
+8. `<NotificationPanel />`
+
+### State Example
+
+```
+dial = number
+action = mappedFunction[dial]
+homeState = { lights, coffee, music, door, temp }
+```
+
+Each component listens for updates and animates.
+Animations: Framer Motion
+Sounds: Howler.js
+Styles: Tailwind CSS
+
+---
+
+# ✨ Summary Line for UI
+
+> “When the user dials the rotary phone, the illustrated home on the screen reacts instantly — lights glow, coffee brews, music plays, and the house comes alive in real-time, turning an old telephone into a magical smart-home controller.”
+
+

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide Projector - Interactive AR Story Viewer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Georgia', serif; 
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0f1f 50%, #0f0a1a 100%); 
+            min-height: 100vh; 
+            color: white; 
+            overflow-x: hidden; 
+            padding: 20px 0; 
+        }
+        body::before { 
+            content: ''; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.03) 0%, transparent 50%); 
+            pointer-events: none; 
+            animation: spookyPulse 8s ease-in-out infinite; 
+        }
+        @keyframes spookyPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+        .container { 
+            max-width: 1400px; 
+            width: 100%; 
+            padding: 40px 20px; 
+            margin: 0 auto; 
+        }
+        .back-link { 
+            position: fixed; 
+            top: 20px; 
+            left: 20px; 
+            padding: 12px 24px; 
+            background: rgba(10, 10, 15, 0.9); 
+            border: 2px solid rgba(138, 43, 226, 0.3); 
+            border-radius: 12px; 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: all 0.3s ease; 
+            backdrop-filter: blur(10px); 
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); 
+            z-index: 1000; 
+        }
+        .back-link:hover { 
+            background: rgba(138, 43, 226, 0.2); 
+            transform: translateY(-2px); 
+        }
+        .title { 
+            text-align: center; 
+            color: white; 
+            font-size: 36px; 
+            margin-bottom: 30px; 
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.6); 
+            animation: flicker 3s ease-in-out infinite; 
+        }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.95; } }
+        .main-layout { 
+            display: flex; 
+            gap: 40px; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+        }
+        .projector-section { 
+            background: rgba(10, 10, 15, 0.9); 
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 2px solid rgba(138, 43, 226, 0.2); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); 
+            backdrop-filter: blur(10px); 
+            flex: 0 0 400px; 
+        }
+        .projector-body { 
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%); 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); 
+            position: relative; 
+        }
+        .projector-lens { 
+            width: 120px; 
+            height: 120px; 
+            margin: 0 auto 20px; 
+            background: radial-gradient(circle, #4a4a4a 0%, #1a1a1a 100%); 
+            border-radius: 50%; 
+            position: relative; 
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.8); 
+        }
+        .projector-lens::before { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 80px; 
+            height: 80px; 
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.4) 0%, transparent 70%); 
+            border-radius: 50%; 
+            animation: lensGlow 2s ease-in-out infinite; 
+        }
+        @keyframes lensGlow { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .light-beam { 
+            width: 100%; 
+            height: 60px; 
+            background: linear-gradient(90deg, transparent 0%, rgba(138, 43, 226, 0.1) 50%, transparent 100%); 
+            margin: 20px 0; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        .light-beam::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: -100%; 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(90deg, transparent 0%, rgba(138, 43, 226, 0.3) 50%, transparent 100%); 
+            animation: lightSweep 3s ease-in-out infinite; 
+        }
+        @keyframes lightSweep { 0%, 100% { left: -100%; } 50% { left: 100%; } }
+        .slide-wheel { 
+            width: 150px; 
+            height: 150px; 
+            margin: 20px auto; 
+            background: radial-gradient(circle, #3a3a3a 0%, #1a1a1a 100%); 
+            border-radius: 50%; 
+            position: relative; 
+            cursor: pointer; 
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); 
+            transition: transform 0.3s ease; 
+        }
+        .slide-wheel:hover { transform: scale(1.05); }
+        .slide-wheel::before { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 100px; 
+            height: 100px; 
+            border: 3px dashed rgba(138, 43, 226, 0.5); 
+            border-radius: 50%; 
+        }
+        .wheel-notch { 
+            position: absolute; 
+            width: 20px; 
+            height: 4px; 
+            background: #ffaa00; 
+            top: 10px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            box-shadow: 0 0 10px #ffaa00; 
+        }
+        .wheel-controls { 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+        .wheel-btn { 
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.4) 0%, rgba(75, 0, 130, 0.4) 100%); 
+            border: 2px solid rgba(138, 43, 226, 0.5); 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-size: 18px; 
+        }
+        .wheel-btn:hover { 
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.6) 100%); 
+            transform: translateY(-2px); 
+        }
+        .projection-screen { 
+            background: rgba(10, 10, 15, 0.9); 
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 2px solid rgba(138, 43, 226, 0.2); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); 
+            backdrop-filter: blur(10px); 
+            flex: 1; 
+            min-width: 500px; 
+        }
+        .screen { 
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8e8d0 100%); 
+            padding: 40px; 
+            border-radius: 15px; 
+            min-height: 500px; 
+            position: relative; 
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.1); 
+            overflow: hidden; 
+        }
+        .screen::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px); 
+            pointer-events: none; 
+        }
+        .slide-content { 
+            position: relative; 
+            z-index: 1; 
+            animation: slideIn 0.5s ease-out; 
+        }
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translateX(50px); } 
+            to { opacity: 1; transform: translateX(0); } 
+        }
+        .slide-title { 
+            font-size: 28px; 
+            color: #2a1a4a; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            font-weight: bold; 
+        }
+        .slide-image { 
+            width: 100%; 
+            max-width: 400px; 
+            height: 250px; 
+            margin: 20px auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 80px; 
+            background: rgba(138, 43, 226, 0.1); 
+            border-radius: 10px; 
+            position: relative; 
+        }
+        .slide-text { 
+            font-size: 16px; 
+            line-height: 1.8; 
+            color: #3a2a5a; 
+            text-align: center; 
+            margin-top: 20px; 
+        }
+        .slide-counter { 
+            text-align: center; 
+            margin-top: 20px; 
+            font-size: 14px; 
+            color: #6a5a8a; 
+        }
+        .slide-library { 
+            margin-top: 30px; 
+        }
+        .library-title { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            font-size: 20px; 
+        }
+        .collection-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+            gap: 15px; 
+        }
+        .collection-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 20px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            border: 2px solid rgba(138, 43, 226, 0.2); 
+            text-align: center; 
+        }
+        .collection-card:hover { 
+            background: rgba(138, 43, 226, 0.2); 
+            transform: translateY(-3px); 
+        }
+        .collection-card.active { 
+            background: rgba(138, 43, 226, 0.3); 
+            border-color: rgba(138, 43, 226, 0.8); 
+        }
+        .collection-icon { 
+            font-size: 40px; 
+            margin-bottom: 10px; 
+        }
+        .collection-name { 
+            font-size: 14px; 
+            color: rgba(255, 255, 255, 0.9); 
+        }
+        @media (max-width: 1024px) { 
+            .main-layout { flex-direction: column; } 
+        }
+    </style>
+</head>
+<body>
+    <a href="../../Labs/camera_lab.html" class="back-link">← Back to Lab</a>
+    <div class="container">
+        <h1 class="title">📽️ Slide Projector - Interactive AR Story Viewer 👻</h1>
+        <div class="main-layout">
+            <div class="projector-section">
+                <div class="projector-body">
+                    <div class="projector-lens"></div>
+                    <div class="light-beam"></div>
+                    <div class="slide-wheel" id="slideWheel">
+                        <div class="wheel-notch"></div>
+                    </div>
+                    <div class="wheel-controls">
+                        <button class="wheel-btn" id="prevBtn">◀</button>
+                        <button class="wheel-btn" id="nextBtn">▶</button>
+                    </div>
+                </div>
+                <div class="slide-library">
+                    <h3 class="library-title">📚 Story Collections</h3>
+                    <div class="collection-grid" id="collectionGrid"></div>
+                </div>
+            </div>
+            <div class="projection-screen">
+                <div class="screen" id="screen">
+                    <div class="slide-content" id="slideContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const collections = {
+            spooky: {
+                name: 'Spooky Tales',
+                icon: '👻',
+                slides: [
+                    { title: 'The Haunted Manor', emoji: '🏚️', text: 'On a foggy night, the old manor stood silent. Its windows glowed with an eerie purple light, and shadows danced behind the curtains...' },
+                    { title: 'The Whispering Woods', emoji: '🌲', text: 'Deep in the forest, trees whispered secrets to those brave enough to listen. But beware—some secrets are better left unheard...' },
+                    { title: 'The Midnight Bell', emoji: '🔔', text: 'At the stroke of midnight, the church bell rang thirteen times. The townspeople knew what that meant—something was coming...' },
+                    { title: 'The Shadow Figure', emoji: '🕴️', text: 'A figure appeared at the end of the hallway, tall and dark. It moved without walking, glided without sound...' },
+                    { title: 'The Forgotten Graveyard', emoji: '🪦', text: 'Among the forgotten graves, one tombstone glowed faintly. The inscription read: "Here lies one who waits to return..."' }
+                ]
+            },
+            bedtime: {
+                name: 'Bedtime Stories',
+                icon: '🌙',
+                slides: [
+                    { title: 'The Sleepy Moon', emoji: '🌙', text: 'High above the clouds, the moon yawned and stretched. "Time for all good children to dream," it whispered softly...' },
+                    { title: 'The Dream Keeper', emoji: '✨', text: 'In a castle made of clouds, the Dream Keeper collected happy thoughts and turned them into beautiful dreams...' },
+                    { title: 'The Starlight Path', emoji: '⭐', text: 'Follow the starlight path through the night sky, where friendly constellations tell stories of adventure and wonder...' },
+                    { title: 'The Cozy Bear', emoji: '🐻', text: 'In a warm cave filled with soft blankets, a little bear snuggled down for winter, dreaming of honey and sunshine...' },
+                    { title: 'Goodnight World', emoji: '🌍', text: 'As the sun sets, the world says goodnight. The flowers close their petals, the birds settle in their nests, and peace fills the air...' }
+                ]
+            },
+            science: {
+                name: 'Science Lessons',
+                icon: '🔬',
+                slides: [
+                    { title: 'The Solar System', emoji: '🌞', text: 'Our solar system contains eight planets orbiting the Sun. Each planet is unique, from tiny Mercury to giant Jupiter...' },
+                    { title: 'The Water Cycle', emoji: '💧', text: 'Water evaporates from oceans, forms clouds, falls as rain, and flows back to the sea—an endless cycle of transformation...' },
+                    { title: 'Photosynthesis', emoji: '🌱', text: 'Plants use sunlight, water, and carbon dioxide to create food and oxygen. They are the Earth\'s natural air purifiers...' },
+                    { title: 'The Human Heart', emoji: '❤️', text: 'Your heart beats about 100,000 times per day, pumping blood through 60,000 miles of blood vessels in your body...' },
+                    { title: 'Electricity', emoji: '⚡', text: 'Electricity is the flow of electrons through a conductor. It powers our homes, devices, and modern world...' }
+                ]
+            },
+            history: {
+                name: 'History Lessons',
+                icon: '📜',
+                slides: [
+                    { title: 'Ancient Egypt', emoji: '🏛️', text: 'The ancient Egyptians built magnificent pyramids and developed one of the world\'s first writing systems—hieroglyphics...' },
+                    { title: 'The Renaissance', emoji: '🎨', text: 'A period of rebirth in art, science, and culture. Leonardo da Vinci and Michelangelo created masterpieces that still inspire us today...' },
+                    { title: 'The Industrial Revolution', emoji: '⚙️', text: 'Machines transformed how people worked and lived. Factories, railways, and new inventions changed the world forever...' },
+                    { title: 'Space Exploration', emoji: '🚀', text: 'In 1969, humans first walked on the Moon. This giant leap opened the door to exploring the cosmos...' },
+                    { title: 'The Digital Age', emoji: '💻', text: 'The invention of computers and the internet connected the world, creating new ways to communicate, learn, and create...' }
+                ]
+            }
+        };
+
+        let currentCollection = 'spooky';
+        let currentSlide = 0;
+        let wheelRotation = 0;
+
+        function renderCollections() {
+            const grid = document.getElementById('collectionGrid');
+            grid.innerHTML = '';
+            Object.entries(collections).forEach(([key, collection]) => {
+                const card = document.createElement('div');
+                card.className = `collection-card ${key === currentCollection ? 'active' : ''}`;
+                card.innerHTML = `
+                    <div class="collection-icon">${collection.icon}</div>
+                    <div class="collection-name">${collection.name}</div>
+                `;
+                card.addEventListener('click', () => loadCollection(key));
+                grid.appendChild(card);
+            });
+        }
+
+        function loadCollection(key) {
+            currentCollection = key;
+            currentSlide = 0;
+            renderCollections();
+            displaySlide();
+        }
+
+        function displaySlide() {
+            const collection = collections[currentCollection];
+            const slide = collection.slides[currentSlide];
+            const content = document.getElementById('slideContent');
+            
+            content.style.animation = 'none';
+            setTimeout(() => {
+                content.style.animation = 'slideIn 0.5s ease-out';
+                content.innerHTML = `
+                    <div class="slide-title">${slide.title}</div>
+                    <div class="slide-image">${slide.emoji}</div>
+                    <div class="slide-text">${slide.text}</div>
+                    <div class="slide-counter">Slide ${currentSlide + 1} of ${collection.slides.length}</div>
+                `;
+            }, 10);
+
+            // Rotate wheel
+            wheelRotation += 60;
+            document.getElementById('slideWheel').style.transform = `rotate(${wheelRotation}deg)`;
+        }
+
+        function nextSlide() {
+            const collection = collections[currentCollection];
+            currentSlide = (currentSlide + 1) % collection.slides.length;
+            displaySlide();
+        }
+
+        function prevSlide() {
+            const collection = collections[currentCollection];
+            currentSlide = (currentSlide - 1 + collection.slides.length) % collection.slides.length;
+            displaySlide();
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+        document.getElementById('slideWheel').addEventListener('click', nextSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Initialize
+        renderCollections();
+        displaySlide();
+    </script>
+</body>
+</html>

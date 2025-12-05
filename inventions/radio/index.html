@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintage Radio - AI Storyteller</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', serif; background: linear-gradient(135deg, #0a0a0f 0%, #1a0f1f 50%, #0f0a1a 100%); min-height: 100vh; color: white; overflow-x: hidden; padding: 20px 0; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.03) 0%, transparent 50%); pointer-events: none; animation: spookyPulse 8s ease-in-out infinite; }
+        @keyframes spookyPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+        .container { max-width: 1400px; width: 100%; padding: 40px 20px; margin: 0 auto; display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; }
+        .back-link { position: fixed; top: 20px; left: 20px; padding: 12px 24px; background: rgba(10, 10, 15, 0.9); border: 2px solid rgba(138, 43, 226, 0.3); border-radius: 12px; color: white; text-decoration: none; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); z-index: 1000; }
+        .back-link:hover { background: rgba(138, 43, 226, 0.2); transform: translateY(-2px); }
+        .title { text-align: center; color: white; font-size: 36px; margin-bottom: 30px; width: 100%; text-shadow: 0 0 20px rgba(138, 43, 226, 0.6); animation: flicker 3s ease-in-out infinite; }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.95; } }
+        .radio-section { background: rgba(10, 10, 15, 0.9); padding: 40px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); flex: 1; min-width: 450px; max-width: 550px; }
+        .radio-body { background: linear-gradient(135deg, #8B4513 0%, #654321 100%); padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 0, 0, 0.3); position: relative; }
+        .radio-body::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" /></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.05"/></svg>'); pointer-events: none; border-radius: 20px; }
+        .frequency-display { background: linear-gradient(180deg, #2a2a1a 0%, #1a1a0a 100%); padding: 20px; border-radius: 10px; margin-bottom: 25px; position: relative; box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8); }
+        .freq-meter { height: 60px; background: linear-gradient(90deg, #ff6b00 0%, #ffaa00 25%, #00ff00 50%, #ffaa00 75%, #ff6b00 100%); border-radius: 5px; position: relative; overflow: hidden; box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5); }
+        .freq-needle { position: absolute; top: 0; bottom: 0; width: 3px; background: #ff0000; box-shadow: 0 0 10px #ff0000; transition: left 0.3s ease; left: 50%; }
+        .freq-numbers { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: #ffaa00; font-family: 'Courier New', monospace; }
+        .station-info { text-align: center; margin-top: 15px; font-size: 14px; color: #ffaa00; text-shadow: 0 0 10px rgba(255, 170, 0, 0.5); min-height: 40px; }
+        .tuning-dial { width: 150px; height: 150px; margin: 30px auto; background: radial-gradient(circle, #3a3a3a 0%, #1a1a1a 100%); border-radius: 50%; position: relative; cursor: pointer; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.5); }
+        .tuning-dial::before { content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 4px; height: 30px; background: #ffaa00; box-shadow: 0 0 10px #ffaa00; }
+        .tuning-dial:active { transform: scale(0.98); }
+        .speaker-grill { background: #2a2a2a; padding: 20px; border-radius: 10px; margin-top: 25px; position: relative; }
+        .grill-pattern { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+        .grill-hole { width: 100%; aspect-ratio: 1; background: #0a0a0a; border-radius: 50%; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8); }
+        .grill-hole.active { background: radial-gradient(circle, rgba(138, 43, 226, 0.6) 0%, #0a0a0a 70%); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .controls { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
+        .control-btn { background: linear-gradient(135deg, rgba(138, 43, 226, 0.4) 0%, rgba(75, 0, 130, 0.4) 100%); border: 2px solid rgba(138, 43, 226, 0.5); color: white; padding: 12px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 14px; }
+        .control-btn:hover { background: linear-gradient(135deg, rgba(138, 43, 226, 0.6) 0%, rgba(75, 0, 130, 0.6) 100%); transform: translateY(-2px); }
+        .control-btn:active { transform: translateY(0); }
+        .content-section { background: rgba(10, 10, 15, 0.9); padding: 30px; border-radius: 20px; border: 2px solid rgba(138, 43, 226, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); flex: 1; min-width: 450px; max-width: 600px; }
+        .story-display { background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 10px; min-height: 350px; max-height: 450px; overflow-y: auto; font-size: 15px; line-height: 1.8; border: 1px solid rgba(138, 43, 226, 0.3); }
+        .story-display::-webkit-scrollbar { width: 6px; }
+        .story-display::-webkit-scrollbar-thumb { background: rgba(138, 43, 226, 0.5); border-radius: 3px; }
+        .channel-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .channel-card { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; border: 2px solid rgba(138, 43, 226, 0.2); }
+        .channel-card:hover { background: rgba(138, 43, 226, 0.2); transform: translateY(-3px); }
+        .channel-card.active { background: rgba(138, 43, 226, 0.3); border-color: rgba(138, 43, 226, 0.8); }
+        .channel-freq { font-size: 20px; font-weight: bold; color: #ffaa00; margin-bottom: 5px; }
+        .channel-name { font-size: 13px; color: rgba(255, 255, 255, 0.8); }
+        @media (max-width: 1024px) { .container { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <a href="../../Labs/radio_lab.html" class="back-link">← Back to Lab</a>
+    <div class="container">
+        <h1 class="title">📻 Vintage Radio - AI Storyteller 👻</h1>
+        <div class="radio-section">
+            <div class="radio-body">
+                <div class="frequency-display">
+                    <div class="freq-meter">
+                        <div class="freq-needle" id="freqNeedle"></div>
+                    </div>
+                    <div class="freq-numbers">
+                        <span>88</span><span>92</span><span>96</span><span>100</span><span>104</span><span>108</span>
+                    </div>
+                    <div class="station-info" id="stationInfo">Turn the dial to tune in...</div>
+                </div>
+                <div class="tuning-dial" id="tuningDial"></div>
+                <div class="speaker-grill">
+                    <div class="grill-pattern" id="grillPattern"></div>
+                </div>
+                <div class="controls">
+                    <button class="control-btn" id="playBtn">▶ Play</button>
+                    <button class="control-btn" id="stopBtn">⏹ Stop</button>
+                </div>
+            </div>
+        </div>
+        <div class="content-section">
+            <h2 style="margin-bottom: 20px; text-align: center;">📡 Available Channels</h2>
+            <div class="channel-list" id="channelList"></div>
+            <h3 style="margin: 25px 0 15px;">📖 Now Playing</h3>
+            <div class="story-display" id="storyDisplay">
+                <div style="color: rgba(255, 255, 255, 0.5); font-style: italic; text-align: center; padding: 50px 20px;">
+                    Select a channel or turn the dial to begin listening...
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const channels = {
+            90: { name: 'Mystery Tales', genre: 'Mystery', story: 'The old mansion stood silent on the hill, its windows dark like hollow eyes. Detective Morrison approached slowly, his footsteps echoing on the gravel path. Inside, a mystery awaited—one that would challenge everything he thought he knew about the impossible...' },
+            94: { name: 'Daily News Brief', genre: 'News', story: 'Good evening, listeners. Today\'s headlines: Scientists discover new method for sustainable energy. Local community celebrates annual harvest festival. Weather forecast predicts clear skies for the weekend. In technology news, vintage devices make surprising comeback...' },
+            98: { name: 'Comedy Hour', genre: 'Comedy', story: 'So I tried to explain to my grandmother what "the cloud" is. She looked at me very seriously and said, "Well, I hope you backed up your files before it rains!" The whole family couldn\'t stop laughing. Technology and family gatherings—always an interesting combination...' },
+            102: { name: 'Sci-Fi Stories', genre: 'Sci-Fi', story: 'The year is 2157. Captain Elena Rodriguez gazed out at the swirling nebula before her ship. "We\'ve traveled further than any human before," she whispered. Her AI companion replied, "And yet, we\'ve only just begun to understand the universe\'s mysteries..."' },
+            106: { name: 'Spooky Tales', genre: 'Horror', story: 'The radio crackled to life at midnight, though no one had turned it on. A voice, distant and hollow, whispered through the static: "I\'ve been waiting for you..." The room grew cold. Outside, shadows moved where no shadows should be...' }
+        };
+        
+        let currentFreq = 98;
+        let isPlaying = false;
+        let dialAngle = 0;
+        
+        // Create speaker grill holes
+        const grillPattern = document.getElementById('grillPattern');
+        for (let i = 0; i < 64; i++) {
+            const hole = document.createElement('div');
+            hole.className = 'grill-hole';
+            grillPattern.appendChild(hole);
+        }
+        
+        // Render channel cards
+        const channelList = document.getElementById('channelList');
+        Object.entries(channels).forEach(([freq, data]) => {
+            const card = document.createElement('div');
+            card.className = 'channel-card';
+            card.innerHTML = `
+                <div class="channel-freq">${freq} FM</div>
+                <div class="channel-name">${data.name}</div>
+                <div style="font-size: 11px; color: rgba(255, 255, 255, 0.5); margin-top: 5px;">${data.genre}</div>
+            `;
+            card.addEventListener('click', () => tuneToFrequency(parseInt(freq)));
+            channelList.appendChild(card);
+        });
+        
+        function tuneToFrequency(freq) {
+            currentFreq = freq;
+            const channel = channels[freq];
+            
+            // Update needle position (88-108 range)
+            const position = ((freq - 88) / 20) * 100;
+            document.getElementById('freqNeedle').style.left = position + '%';
+            
+            // Update station info
+            document.getElementById('stationInfo').innerHTML = `
+                <div style="font-size: 18px; font-weight: bold;">${freq} FM</div>
+                <div style="font-size: 12px; margin-top: 5px;">${channel.name} • ${channel.genre}</div>
+            `;
+            
+            // Update active channel card
+            document.querySelectorAll('.channel-card').forEach(card => card.classList.remove('active'));
+            const cards = Array.from(document.querySelectorAll('.channel-card'));
+            const index = Object.keys(channels).indexOf(freq.toString());
+            if (cards[index]) cards[index].classList.add('active');
+            
+            // Display story
+            const storyDisplay = document.getElementById('storyDisplay');
+            storyDisplay.innerHTML = `
+                <div style="color: #ffaa00; font-weight: bold; margin-bottom: 15px; font-size: 16px;">
+                    📻 ${channel.name}
+                </div>
+                <div style="color: rgba(255, 255, 255, 0.9);">
+                    ${channel.story}
+                </div>
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(138, 43, 226, 0.3); font-size: 12px; color: rgba(255, 255, 255, 0.6);">
+                    Broadcasting on ${freq} FM • ${channel.genre}
+                </div>
+            `;
+            
+            // Auto-play if not already playing
+            if (!isPlaying) {
+                playRadio();
+            }
+        }
+        
+        function playRadio() {
+            isPlaying = true;
+            document.getElementById('playBtn').textContent = '⏸ Pause';
+            
+            // Activate speaker grill animation
+            const holes = document.querySelectorAll('.grill-hole');
+            holes.forEach((hole, index) => {
+                if (Math.random() > 0.7) {
+                    hole.classList.add('active');
+                }
+            });
+        }
+        
+        function stopRadio() {
+            isPlaying = false;
+            document.getElementById('playBtn').textContent = '▶ Play';
+            
+            // Deactivate speaker grill
+            document.querySelectorAll('.grill-hole').forEach(hole => {
+                hole.classList.remove('active');
+            });
+        }
+        
+        // Tuning dial interaction
+        let isDragging = false;
+        const tuningDial = document.getElementById('tuningDial');
+        
+        tuningDial.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            updateDialPosition(e);
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                updateDialPosition(e);
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+        
+        function updateDialPosition(e) {
+            const rect = tuningDial.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+            dialAngle = angle;
+            
+            tuningDial.style.transform = `rotate(${angle}rad)`;
+            
+            // Map angle to frequency (88-108)
+            const normalizedAngle = ((angle + Math.PI) / (2 * Math.PI)) * 20 + 88;
+            const freq = Math.round(normalizedAngle / 2) * 2; // Round to even numbers
+            
+            // Find closest channel
+            const freqs = Object.keys(channels).map(Number);
+            const closest = freqs.reduce((prev, curr) => 
+                Math.abs(curr - freq) < Math.abs(prev - freq) ? curr : prev
+            );
+            
+            if (closest !== currentFreq) {
+                tuneToFrequency(closest);
+            }
+        }
+        
+        // Control buttons
+        document.getElementById('playBtn').addEventListener('click', () => {
+            if (isPlaying) {
+                stopRadio();
+            } else {
+                if (currentFreq) {
+                    playRadio();
+                } else {
+                    tuneToFrequency(98);
+                }
+            }
+        });
+        
+        document.getElementById('stopBtn').addEventListener('click', stopRadio);
+        
+        // Initialize with default station
+        tuneToFrequency(98);
+    </script>
+</body>
+</html>
